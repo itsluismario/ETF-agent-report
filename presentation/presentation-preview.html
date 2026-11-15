@@ -34,7 +34,7 @@
     .display.math{display: block; text-align: center; margin: 0.5rem auto;}
   </style>
   <link rel="stylesheet" href="https://unpkg.com/reveal.js@4.6.1/dist/theme/black.css" id="theme">
-  <link rel="stylesheet" href="styles.css?v=5"/>
+  <link rel="stylesheet" href="styles.css?v=6"/>
 </head>
 <body>
   <div class="reveal">
@@ -178,24 +178,22 @@ Fidelity ETF, holding by holding</p>
   <div class="sp n8n"><div class="name">n8n</div><div class="role">The engine that runs everything</div><ul><li><b>4 workflows</b>: 2 scheduled, 2 AI agents</li><li><b>AI Agent node</b> with tools: Postgres queries and a Fidelity fetch sub-workflow</li><li><b>Schedule Trigger</b> runs the monthly cycle with no manual steps</li><li><b>HTTP Request</b> batching keeps within the free price API limit (25 a day)</li></ul></div>
 </div>
 </section>
-<section id="demo-problem-solution-working-product"
-class="slide level2">
+<section id="demo-problem-solution-working-product" class="slide level2">
 <h2>Demo: problem → solution → working product</h2>
-<ol type="1">
-<li><strong>The problem</strong>: open a Fidelity ETF page. It shows
-names and weights, nothing about performance.</li>
-<li><strong>The solution</strong>: show the n8n workflows and the
-monthly cycle (holdings on day 1, prices on days 2–7).</li>
-<li><strong>The agent</strong>: ask the Holdings Agent for
-<em>“FCCM”</em>: it builds the full list and finds the tickers.</li>
-<li><strong>The product</strong>: open the live dashboard, switch ETFs,
-sort by contribution and search for a company.</li>
-<li><strong>The insight</strong>: “Toronto-Dominion Bank added +1.67
-points to FCCL this year.”</li>
-</ol>
-<p><small class="muted">Live dashboard: <a
-href="https://chimerical-arithmetic-142fdb.netlify.app"
-class="uri">https://chimerical-arithmetic-142fdb.netlify.app</a></small></p>
+<div class="demo-today">
+  <img src="images/current-website.jpg" alt="Fidelity FCCL holdings list: company names and weights only" class="shot">
+  <div class="dt-text">
+    <p class="dt-h">What an FCCM investor sees today</p>
+    <ul class="dt-list">
+      <li class="yes">Company names</li>
+      <li class="yes">Weight of each company</li>
+      <li class="no">How each company is performing</li>
+      <li class="no">Returns by quarter or by year</li>
+      <li class="no">Which companies moved the fund</li>
+    </ul>
+    <p class="dt-next">Now, the live dashboard →</p>
+  </div>
+</div>
 </section>
 <section id="innovation-and-impact" class="slide level2">
 <h2>Innovation and impact</h2>

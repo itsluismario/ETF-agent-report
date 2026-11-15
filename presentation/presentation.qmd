@@ -155,13 +155,22 @@ format:
 
 ## Demo: problem → solution → working product
 
-1. **The problem**: open a Fidelity ETF page. It shows names and weights, nothing about performance.
-2. **The solution**: show the n8n workflows and the monthly cycle (holdings on day 1, prices on days 2–7).
-3. **The agent**: ask the Holdings Agent for *"FCCM"*: it builds the full list and finds the tickers.
-4. **The product**: open the live dashboard, switch ETFs, sort by contribution and search for a company.
-5. **The insight**: "Toronto-Dominion Bank added +1.67 points to FCCL this year."
-
-<small class="muted">Live dashboard: <https://chimerical-arithmetic-142fdb.netlify.app></small>
+```{=html}
+<div class="demo-today">
+  <img src="images/current-website.jpg" alt="Fidelity FCCL holdings list: company names and weights only" class="shot">
+  <div class="dt-text">
+    <p class="dt-h">What an FCCM investor sees today</p>
+    <ul class="dt-list">
+      <li class="yes">Company names</li>
+      <li class="yes">Weight of each company</li>
+      <li class="no">How each company is performing</li>
+      <li class="no">Returns by quarter or by year</li>
+      <li class="no">Which companies moved the fund</li>
+    </ul>
+    <p class="dt-next">Now, the live dashboard →</p>
+  </div>
+</div>
+```
 
 ## Innovation and impact
 

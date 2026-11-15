@@ -144,3 +144,15 @@
 .impact .ic { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 16px 20px; font-size: 0.7em; line-height: 1.4; }
 .impact .ic > b { display: block; font-size: 1.3em; margin-bottom: 6px; color: var(--accent); }
 .impact ul { margin: 0 0 0 1.1em; padding: 0; } .impact li { margin: 8px 0; }
+
+/* demo slide: today's Fidelity view */
+.demo-today { display: grid; grid-template-columns: auto 1fr; gap: 36px; align-items: center; margin-top: 4px; }
+.demo-today img.shot { max-height: 540px; width: auto; margin: 0; }
+.dt-h { font-size: 0.95em; font-weight: 800; margin: 0 0 12px; }
+.dt-list { list-style: none; margin: 0; padding: 0; font-size: 0.8em; }
+.dt-list li { margin: 10px 0; padding-left: 1.5em; position: relative; }
+.dt-list li::before { position: absolute; left: 0; font-weight: 800; }
+.dt-list li.yes::before { content: "✓"; color: var(--pos); }
+.dt-list li.no { color: var(--muted); }
+.dt-list li.no::before { content: "✗"; color: var(--neg); }
+.dt-next { margin-top: 22px; font-size: 0.75em; color: #ffd166; font-weight: 700; }

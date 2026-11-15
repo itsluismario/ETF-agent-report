@@ -50,25 +50,24 @@ Each block shows the time window, what is on screen, and the narration to paste 
 
 ## 1:15 – 2:15 · DEMO (60 s · ~150 words)
 
-**On screen:** start on slide 6 "Demo", then switch to the browser.
+**On screen:** slide 6 "Demo" shows the Fidelity holdings screenshot (`images/current-website.jpg`). Narrate the first line over it, then switch to the browser, and come back to the presentation for slide 7.
 
 Record the screen while the audio plays, or present live. Have these tabs open in this order before you start:
-1. `fidelity.ca/en/products/etfs/fccl/` scrolled to the holdings list
-2. n8n → the project's workflow list
-3. The dashboard: <https://chimerical-arithmetic-142fdb.netlify.app>
+1. n8n → the project's workflow list
+2. The dashboard: <https://chimerical-arithmetic-142fdb.netlify.app>
 
 | Time | Action on screen | Narration |
 |---|---|---|
-| 1:15 – 1:23 | **Tab 1:** Fidelity FCCL page, scroll the holdings | > Imagine you hold FCCL. Today, this is what you see: names and weights, nothing about performance. |
-| 1:23 – 1:38 | **Tab 2:** n8n. Hover the 4 workflows, then open "Prices – monthly Alpha Vantage fetch" for 3 s | > In n8n we have four workflows. Holdings refresh on day one, prices on days two to seven, and two AI agents. Everything runs on a schedule. |
-| 1:38 – 1:48 | **Tab 3:** dashboard on FCCL, point at the KPI cards and top contributors | > And this is what you'd get every month. For FCCL you see the holdings, how much is priced, and who contributed most this year. |
+| 1:15 – 1:23 | **Slide 6:** the Fidelity screenshot (names and weights) | > Imagine you hold a Fidelity ETF, like FCCM. Today, this is what you see: names and weights, nothing about performance. |
+| 1:23 – 1:38 | **Browser, tab 1:** n8n. Hover the 4 workflows, then open "Prices – monthly Alpha Vantage fetch" for 3 s | > In n8n we have four workflows. Holdings refresh on day one, prices on days two to seven, and two AI agents. Everything runs on a schedule. |
+| 1:38 – 1:48 | **Tab 2:** dashboard on FCCL, point at the KPI cards and top contributors | > And this is what you'd get every month. For FCCL you see the holdings, how much is priced, and who contributed most this year. |
 | 1:48 – 1:58 | Scroll to **Fund map**. Hover RY, then TD | > The fund map shows every holding: box size is its weight, colour is its return. Green is up, grey means no price yet. |
 | 1:58 – 2:08 | Click the **TD** box (the table filters), point at the YTD and Contrib. columns | > Click Toronto-Dominion Bank: up thirty-six percent this year with a four point six percent weight. That's one point six seven points for the fund. |
-| 2:08 – 2:15 | Clear the search, click the **FCCM** tab | > And the same view works for every ETF. |
+| 2:08 – 2:15 | Clear the search, click the **FCCM** tab, then go back to the presentation (slide 7) | > And the same view works for every ETF. |
 
 Narration for ElevenLabs, as one block (~150 words):
 
-> Imagine you hold FCCL. Today, this is what you see: names and weights, nothing about performance. <break time="0.5s" />
+> Imagine you hold a Fidelity ETF, like FCCM. Today, this is what you see: names and weights, nothing about performance. <break time="0.5s" />
 > In n8n we have four workflows. Holdings refresh on day one, prices on days two to seven, and two AI agents. Everything runs on a schedule. <break time="0.5s" />
 > And this is what you'd get every month. For FCCL you see the holdings, how much is priced, and who contributed most this year. <break time="0.5s" />
 > The fund map shows every holding: box size is its weight, colour is its return. Green is up, grey means no price yet. <break time="0.5s" />
