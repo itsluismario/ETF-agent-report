@@ -2,8 +2,10 @@
 title: "ETF Agent Report"
 subtitle: "A monthly report that explains what is driving a Fidelity ETF, holding by holding"
 author:
-  - "Luis Mario"
+  - "Linh Dan Ngo"
   - "Evan Lin"
+  - "Dylan Li"
+  - "Luis Mario"
 date: "November 2026"
 format:
   revealjs:
@@ -32,23 +34,6 @@ Fidelity's ETF pages for **FCCA** and its four underlying ETFs (**FCCL, FCCV, FC
 ::: notes
 Open with the fund page: a list of names and weights, nothing else. Then the pain: 117 companies to research by hand, every month.
 :::
-
-## Why it matters
-
-::: {.columns}
-::: {.column width="48%"}
-<p class="muted">The fund page answers</p>
-<p class="big">"What's in<br>my ETF?"</p>
-:::
-::: {.column width="52%"}
-<p class="muted">The investor actually needs</p>
-<p class="big accent">"Which companies are helping or hurting my returns, and why?"</p>
-:::
-:::
-
-<br>
-
-This report fills that gap: it pairs each holding's **weight** with its **performance** and its **news**, so the investor can understand and monitor the fund **month by month**.
 
 ## Goal and scope
 
@@ -165,25 +150,6 @@ Build a **monthly report** that shows, for every company in the ETF, its histori
 </div>
 ```
 
-## How it runs every month
-
-```{=html}
-<div class="timeline">
-  <div class="step"><div class="d">Day 1</div><b>Holdings refresh</b><br>Downloads the latest holdings of FCCL, FCCV, FCCQ and FCCM from Fidelity (269 holdings) and reuses the tickers it already knows.</div>
-  <div class="step"><div class="d">Days 2–7</div><b>Price collection</b><br>Gets month-end prices for ~24 companies a day (the free API allows 25 a day). Six days cover all 117 companies.</div>
-  <div class="step"><div class="d">Any time</div><b>Report and dashboard</b><br>The Returns Agent writes the summary; the dashboard reads live data from Postgres on every visit.</div>
-</div>
-```
-
-<br>
-
-| Workflow | Type | Role |
-|---|---|---|
-| Holdings – monthly refresh | Scheduled (day 1) | Full holdings list per ETF |
-| ETF Holdings Agent | AI agent (Gemini Flash-Lite) | Maps company names to TSX tickers |
-| Prices – monthly Alpha Vantage fetch | Scheduled (days 2–7) | Prices → returns in SQL |
-| ETF Returns Agent | AI agent (Gemini Flash-Lite) | Top / lowest contributors summary |
-
 ## Technical depth: what made it hard
 
 | Challenge | How we solved it |
@@ -198,36 +164,6 @@ Build a **monthly report** that shows, for every company in the ETF, its histori
 ::: notes
 Each row is a real problem we hit while building, not a hypothetical one.
 :::
-
-## It actually works
-
-```{=html}
-<div class="stats">
-  <div class="stat"><div class="n">4</div><div class="l">ETFs covered</div></div>
-  <div class="stat"><div class="n">269</div><div class="l">holdings with weights</div></div>
-  <div class="stat"><div class="n">117</div><div class="l">companies with a ticker</div></div>
-  <div class="stat"><div class="n">$0</div><div class="l">running cost (free tiers)</div></div>
-</div>
-```
-
-<br>
-
-- Holdings match Fidelity's full list: weights sum to **99.99–100.02%** per ETF.
-- Real prices verified, e.g. Royal Bank closed at **288.37 CAD** on Nov 13, 2026.
-- Example insight (FCCL, 2026 YTD): **Toronto-Dominion Bank** returned <span class="pos">+36.38%</span> with a 4.60% weight, contributing <span class="pos">+1.67 pts</span>, the top contributor.
-- Tested end to end: holdings → prices → returns → summary → live page.
-
-## Design and user experience
-
-![](images/site-overview.jpg){.shot width="92%"}
-
-<small>Tabs per ETF · how much of the fund is priced so far · top and lowest contributors for the year and the last quarter, with bars sized by contribution</small>
-
-## Every holding, side by side
-
-![](images/site-table.jpg){.shot width="92%"}
-
-<small>Weight next to quarterly and annual returns · contribution pills · sortable columns · search by company or ticker · partial periods labelled</small>
 
 ## Demo: problem → solution → working product
 
@@ -246,39 +182,11 @@ Each row is a real problem we hit while building, not a hypothetical one.
 - **Built to be trusted**: missing data is shown as *n/a*, never guessed; AI-assigned tickers are marked *unverified* until a price confirms them.
 - **Accessible**: runs entirely on free tiers (n8n, Postgres, Alpha Vantage, Gemini Flash-Lite, Netlify).
 
-## Limitations, honestly
-
-- **Feature 1 (news and sentiment) is not built yet.** It is the next step.
-- **FCCA itself** is not shown yet: we cover its four underlying ETFs; the combined FCCA view is planned.
-- **Prices fill in over the month**: the free API allows 25 calls a day, so a full refresh takes 6 days. Today 22 of 117 companies are priced; the rest arrive on days 2–7.
-- A few symbols are **not available** from the price source (e.g. Dollarama, Canadian Pacific) and show *n/a*.
-- Contribution uses **today's weights** for past periods: an approximation, not the fund's official return.
-
-## Next steps
-
-| | |
-|---|---|
-| <span class="tag next">FEATURE 1</span> **News and sentiment** | A News Agent collects each company's most relevant news from the past month, rates each item and the month as *Very good / Good / Bad / Very bad*, and stores a short summary with the source link |
-| <span class="tag next">FCCA</span> **Combined view** | Combine FCCA's weight in each ETF with each company's weight in that ETF |
-| <span class="tag next">DELIVERY</span> **Monthly email or PDF** | Send the summary and a link to the dashboard on the 8th of each month |
-| <span class="tag next">COVERAGE</span> **Faster price refresh** | A paid data tier, or a second source for symbols that are missing |
-
-## How we meet the judging criteria
-
-```{=html}
-<div class="criteria">
-  <div class="c"><b>Technical Depth &amp; Execution</b><br>4 workflows, 2 AI agents, SQL return engine with split adjustment, rate-limit queue, secured public API. Working end to end.</div>
-  <div class="c"><b>Innovation &amp; Impact</b><br>Turns "what's in my ETF" into "who drives my returns". Replaces hours of manual research every month, at $0.</div>
-  <div class="c"><b>Design &amp; User Experience</b><br>One page per ETF: summary cards, contributor rankings, a sortable and searchable table, plain-language notes.</div>
-  <div class="c"><b>Demo</b><br>Problem (Fidelity page) → solution (agents and monthly cycle) → working product (live dashboard).</div>
-</div>
-```
-
 ## Thank you {.center}
 
 **ETF Agent Report**
 
-Luis Mario · Evan Lin
+Linh Dan Ngo · Evan Lin · Dylan Li · Luis Mario
 
 Live dashboard: <https://chimerical-arithmetic-142fdb.netlify.app>
 
