@@ -43,6 +43,7 @@
 Fidelity ETF, holding by holding</p>
   <p class="author">Luis Mario</p>
   <p class="date">November 2026</p>
+<div class="powered"><span>Built with</span><span class="chip fid big">Fidelity</span><span>data · orchestrated by</span><span class="chip n8n big">n8n</span></div>
 </section>
 
 <section id="the-problem" class="slide level2 smaller">
@@ -133,23 +134,29 @@ returns, contribution · Delivery: live web dashboard</small></p>
 <section id="the-solution-in-one-picture" class="slide level2">
 <h2>The solution in one picture</h2>
 <div class="hub">
-  <div class="col-h">Sources</div><div></div><div class="col-h">n8n workflows</div><div></div><div class="col-h">Supabase · Postgres</div><div></div><div class="col-h">Website</div>
+  <div class="col-h">Data source</div><div></div><div class="col-h"><span class="chip n8n">n8n</span> orchestration</div><div></div><div class="col-h">Storage</div><div></div><div class="col-h">Website</div>
 
-  <div class="node src"><b>Fidelity</b>Holdings &amp; weights</div><div class="arrow">→</div>
-  <div class="node wf"><b>Holdings refresh + Holdings Agent</b>Day 1 · finds TSX tickers</div><div class="arrow both">⇄</div>
-  <div class="node db"><b>Supabase (Postgres)</b>The single source of truth<ul><li><code>etf_constituents</code> holdings + tickers</li><li><code>price_monthly</code> prices</li><li><code>perf_returns</code> returns, computed in SQL (split-adjusted)</li><li><code>report_runs</code> agent summaries</li></ul><span class="sm">Every workflow reads its queue from here and writes its results back</span></div>
+  <div class="node src fid"><span class="chip fid">Sponsor</span><b>Fidelity</b>Full holdings &amp; weights of FCCL, FCCV, FCCQ, FCCM</div><div class="arrow">→</div>
+  <div class="node wf n8n"><b>Holdings refresh + Holdings Agent</b>Day 1 · finds TSX tickers</div><div class="arrow both">⇄</div>
+  <div class="node db"><b>Supabase (Postgres)</b>Shared database<ul><li><code>etf_constituents</code> holdings + tickers</li><li><code>price_monthly</code> prices</li><li><code>perf_returns</code> returns, computed in SQL</li><li><code>report_runs</code> agent summaries</li></ul><span class="sm">Every n8n workflow reads its work from here and writes its results back</span></div>
   <div class="arrow out">→</div>
   <div class="node web"><b>Netlify dashboard</b>Calls <code>get_public_report()</code> on every visit (read-only key)</div>
 
   <div class="node src"><b>Alpha Vantage</b>Month-end prices</div><div class="arrow">→</div>
-  <div class="node wf"><b>Price collection</b>Days 2–7 · ~24 tickers a day</div><div class="arrow both">⇄</div>
+  <div class="node wf n8n"><b>Price collection</b>Days 2–7 · ~24 tickers a day</div><div class="arrow both">⇄</div>
 
-  <div class="node src"><b>Gemini</b>Flash-Lite (free)</div><div class="arrow">→</div>
-  <div class="node wf"><b>Returns Agent</b>Writes the summary</div><div class="arrow both">⇄</div>
+  <div class="node src"><b>Gemini</b>Model inside the n8n AI Agents</div><div class="arrow">→</div>
+  <div class="node wf n8n"><b>Returns Agent</b>Writes the summary</div><div class="arrow both">⇄</div>
 </div>
 <p><br></p>
-<p><small class="muted">No manual steps: the data refreshes itself every
-month, and the page always shows the latest numbers.</small></p>
+<p><small class="muted">n8n runs every step; ⇄ = the workflow reads from and writes to the database. No manual steps.</small></p>
+</section>
+<section id="built-on-our-sponsors" class="slide level2">
+<h2>Built on our sponsors: Fidelity × n8n</h2>
+<div class="sponsors">
+  <div class="sp fid"><span class="chip fid">Sponsor</span><div class="name">Fidelity</div><div class="role">The data and the question</div><ul><li>The four ETFs inside <b>FCCA</b>: FCCL, FCCV, FCCQ, FCCM</li><li><b>Full holdings list</b> from Fidelity's product data: 269 holdings, weights summing to ~100%</li><li>Refreshed on day 1 of every month, so the report always matches the fund</li><li>The report answers the question Fidelity's page leaves open: <i>how is each holding doing?</i></li></ul></div>
+  <div class="sp n8n"><span class="chip n8n">Sponsor</span><div class="name">n8n</div><div class="role">The engine that runs everything</div><ul><li><b>4 workflows</b>: 2 scheduled, 2 AI agents</li><li><b>AI Agent node</b> with tools: Postgres queries and a Fidelity fetch sub-workflow</li><li><b>Schedule Trigger</b> runs the monthly cycle with no manual steps</li><li><b>HTTP Request</b> batching keeps within the free price API limit (25 a day)</li></ul></div>
+</div>
 </section>
 <section id="how-it-runs-every-month" class="slide level2">
 <h2>How it runs every month</h2>
@@ -389,6 +396,7 @@ href="https://chimerical-arithmetic-142fdb.netlify.app"
 class="uri">https://chimerical-arithmetic-142fdb.netlify.app</a></p>
 <p>Code: <a href="https://github.com/itsluismario/ETF-agent-report"
 class="uri">https://github.com/itsluismario/ETF-agent-report</a></p>
+<div class="powered"><span>Built with</span><span class="chip fid big">Fidelity</span><span>data · orchestrated by</span><span class="chip n8n big">n8n</span></div>
 <p><small class="muted">Information only, not investment advice. Data:
 Fidelity Canada product data, Alpha Vantage.</small></p>
 </section>

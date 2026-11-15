@@ -61,3 +61,28 @@
 .hub .arrow.both { color: var(--pos); font-weight: 700; }
 .hub .arrow.out { grid-column: 6; grid-row: 2 / span 3; }
 .hub code { font-size: 0.92em; color: var(--ink); background: rgba(255,255,255,.06); padding: 0 4px; border-radius: 4px; }
+
+/* sponsor emphasis: Fidelity (green) and n8n (coral) */
+:root { --fid: #3fa45b; --n8n: #ff6d5a; }
+.reveal .chip { display: inline-block; padding: 1px 9px; border-radius: 99px; font-size: 0.78em; font-weight: 800; letter-spacing: .04em; text-transform: none; vertical-align: middle; }
+.reveal .chip.fid { background: rgba(63,164,91,.2); color: var(--fid); border: 1px solid var(--fid); }
+.reveal .chip.n8n { background: rgba(255,109,90,.18); color: var(--n8n); border: 1px solid var(--n8n); }
+.reveal .chip.big { font-size: 1em; padding: 3px 14px; }
+.hub .node.fid { border: 2px solid var(--fid); background: rgba(63,164,91,.1); }
+.hub .node.fid b { color: var(--fid); font-size: 1.45em; }
+.hub .node.fid .chip { font-size: 0.85em; margin-bottom: 4px; }
+.hub .node.n8n { border: 2px solid var(--n8n); background: rgba(255,109,90,.08); }
+.hub .node.n8n b { color: var(--n8n); }
+.hub .col-h .chip { font-size: 1.1em; letter-spacing: 0; }
+.hub .node.db { border: 1px solid var(--accent); background: var(--panel); }
+.hub .node.db b { color: var(--accent); font-size: 1.2em; }
+.hub .arrow.both { color: var(--n8n); }
+.sponsors { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 18px; }
+.sponsors .sp { background: var(--panel); border-radius: 16px; padding: 20px 24px; font-size: 0.66em; line-height: 1.4; }
+.sponsors .sp.fid { border: 2px solid var(--fid); background: linear-gradient(180deg, rgba(63,164,91,.14), var(--panel) 55%); }
+.sponsors .sp.n8n { border: 2px solid var(--n8n); background: linear-gradient(180deg, rgba(255,109,90,.13), var(--panel) 55%); }
+.sponsors .name { font-size: 2.3em; font-weight: 800; margin-top: 6px; line-height: 1.1; }
+.sponsors .fid .name { color: var(--fid); } .sponsors .n8n .name { color: var(--n8n); }
+.sponsors .role { color: var(--muted); font-size: 1.1em; margin-bottom: 8px; }
+.sponsors ul { margin: 0 0 0 1.1em; padding: 0; } .sponsors li { margin: 6px 0; }
+.reveal .powered { display: flex; gap: 10px; align-items: center; justify-content: center; flex-wrap: wrap; font-size: 0.7em; color: var(--muted); margin: 22px 0 10px; }
