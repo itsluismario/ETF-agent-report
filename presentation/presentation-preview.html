@@ -43,7 +43,7 @@
 Fidelity ETF, holding by holding</p>
   <p class="author">Luis Mario</p>
   <p class="date">November 2026</p>
-<div class="powered"><span>Built with</span><span class="chip fid big">Fidelity</span><span>data · orchestrated by</span><span class="chip n8n big">n8n</span></div>
+<div class="powered">Built with Fidelity data · orchestrated by n8n</div>
 </section>
 
 <section id="the-problem" class="slide level2 smaller">
@@ -133,29 +133,79 @@ returns, contribution · Delivery: live web dashboard</small></p>
 </section>
 <section id="the-solution-in-one-picture" class="slide level2">
 <h2>The solution in one picture</h2>
-<div class="hub">
-  <div class="col-h">Data source</div><div></div><div class="col-h"><span class="chip n8n">n8n</span> orchestration</div><div></div><div class="col-h">Storage</div><div></div><div class="col-h">Website</div>
-
-  <div class="node src fid"><span class="chip fid">Sponsor</span><b>Fidelity</b>Full holdings &amp; weights of FCCL, FCCV, FCCQ, FCCM</div><div class="arrow">→</div>
-  <div class="node wf n8n"><b>Holdings refresh + Holdings Agent</b>Day 1 · finds TSX tickers</div><div class="arrow both">⇄</div>
-  <div class="node db"><b>Supabase (Postgres)</b>Shared database<ul><li><code>etf_constituents</code> holdings + tickers</li><li><code>price_monthly</code> prices</li><li><code>perf_returns</code> returns, computed in SQL</li><li><code>report_runs</code> agent summaries</li></ul><span class="sm">Every n8n workflow reads its work from here and writes its results back</span></div>
-  <div class="arrow out">→</div>
-  <div class="node web"><b>Netlify dashboard</b>Calls <code>get_public_report()</code> on every visit (read-only key)</div>
-
-  <div class="node src"><b>Alpha Vantage</b>Month-end prices</div><div class="arrow">→</div>
-  <div class="node wf n8n"><b>Price collection</b>Days 2–7 · ~24 tickers a day</div><div class="arrow both">⇄</div>
-
-  <div class="node src"><b>Gemini</b>Model inside the n8n AI Agents</div><div class="arrow">→</div>
-  <div class="node wf n8n"><b>Returns Agent</b>Writes the summary</div><div class="arrow both">⇄</div>
+<div class="pflow" id="pflow">
+<svg viewBox="0 0 1160 470" class="pf-svg" role="img" aria-label="Animated data flow: Fidelity and Alpha Vantage feed n8n workflows, which store everything in Postgres; the dashboard reads Postgres">
+  <defs><marker id="pf-tip" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="14" markerHeight="14" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="pf-tipfill"/></marker></defs>
+  <rect class="pf-group" x="30" y="168" width="800" height="136" rx="18"/>
+  <text class="pf-grouplabel" x="816" y="188" text-anchor="end">n8n · runs every step</text>
+  <g id="pf-lines">
+    <line data-l="0" x1="150" y1="100" x2="150" y2="196"/>
+    <line data-l="1" x1="150" y1="276" x2="150" y2="380"/>
+    <line data-l="2" x1="430" y1="100" x2="430" y2="196"/>
+    <line data-l="3" x1="430" y1="276" x2="430" y2="380"/>
+    <line data-l="4" x1="710" y1="276" x2="710" y2="380"/>
+    <line data-l="5" x1="830" y1="425" x2="900" y2="425"/>
+  </g>
+  <g class="pf-node fid" data-n="fid"><rect x="60" y="30" width="180" height="70" rx="12"/><text x="150" y="62" class="t">Fidelity</text><text x="150" y="84" class="s">ETF holdings &amp; weights</text></g>
+  <g class="pf-node src" data-n="av"><rect x="340" y="30" width="180" height="70" rx="12"/><text x="430" y="62" class="t">Alpha Vantage</text><text x="430" y="84" class="s">Month-end prices</text></g>
+  <g class="pf-node n8n" data-n="hold"><rect x="50" y="196" width="200" height="80" rx="12"/><text x="150" y="228" class="t">Holdings</text><text x="150" y="250" class="s">refresh + AI agent</text></g>
+  <g class="pf-node n8n" data-n="price"><rect x="330" y="196" width="200" height="80" rx="12"/><text x="430" y="228" class="t">Prices</text><text x="430" y="250" class="s">monthly collection</text></g>
+  <g class="pf-node n8n" data-n="ret"><rect x="610" y="196" width="200" height="80" rx="12"/><text x="710" y="228" class="t">Returns</text><text x="710" y="250" class="s">AI agent (Gemini)</text></g>
+  <g class="pf-node db" data-n="pg"><rect x="30" y="380" width="800" height="90" rx="14"/><text x="430" y="418" class="t">Postgres database</text><text x="430" y="444" class="s">holdings · tickers · prices · returns (computed in SQL) · summaries</text></g>
+  <g class="pf-node web" data-n="web"><rect x="900" y="380" width="230" height="90" rx="14"/><text x="1015" y="418" class="t">Live dashboard</text><text x="1015" y="444" class="s">reads on every visit</text></g>
+  <g id="pf-dot" style="opacity:0"><rect id="pf-dotbg" x="-48" y="-14" width="96" height="28" rx="14"/><text id="pf-dottext" x="0" y="5"></text></g>
+</svg>
+<div class="pf-bar">
+  <div class="pf-cap"><span class="pf-when" id="pf-when"></span><span id="pf-text"></span></div>
+  <div class="pf-ctl"><span id="pf-steps"></span><button id="pf-play" title="Pause / play">❚❚</button></div>
 </div>
-<p><br></p>
-<p><small class="muted">n8n runs every step; ⇄ = the workflow reads from and writes to the database. No manual steps.</small></p>
+</div>
+<script>
+(function () {
+  const root = document.getElementById('pflow'); if (!root || root.dataset.ready) return; root.dataset.ready = 1;
+  const S = [
+    { l: 0, rev: false, from: 'fid', to: 'hold', pkt: 'holdings', when: 'Day 1', txt: 'n8n downloads the full holdings list of each ETF from Fidelity.' },
+    { l: 1, rev: false, from: 'hold', to: 'pg', pkt: 'tickers', when: 'Day 1', txt: 'The AI agent matches each company to its stock ticker; everything is saved in Postgres.' },
+    { l: 3, rev: true, from: 'pg', to: 'price', pkt: 'to-do list', when: 'Days 2–7', txt: 'n8n asks Postgres which companies still need a price (about 24 a day).' },
+    { l: 2, rev: false, from: 'av', to: 'price', pkt: 'prices', when: 'Days 2–7', txt: 'n8n fetches month-end prices from Alpha Vantage.' },
+    { l: 3, rev: false, from: 'price', to: 'pg', pkt: 'prices', when: 'Days 2–7', txt: 'Prices are saved, and Postgres calculates quarterly, annual and YTD returns.' },
+    { l: 4, rev: true, from: 'pg', to: 'ret', pkt: 'returns', when: 'Monthly', txt: 'The Returns agent reads which holdings drove the fund up or down…' },
+    { l: 4, rev: false, from: 'ret', to: 'pg', pkt: 'summary', when: 'Monthly', txt: '…and saves a plain-language summary.' },
+    { l: 5, rev: false, from: 'pg', to: 'web', pkt: 'report', when: 'Any time', txt: 'The dashboard reads the latest numbers from Postgres every time it is opened.' }
+  ];
+  const q = s => root.querySelector(s), qa = s => [...root.querySelectorAll(s)];
+  const dot = q('#pf-dot'), steps = q('#pf-steps');
+  steps.innerHTML = S.map((_, i) => `<button data-i="${i}">${i + 1}</button>`).join('');
+  let i = 0, playing = true, timer = null, raf = null;
+  function show(k) {
+    i = (k + S.length) % S.length; const s = S[i];
+    qa('#pf-lines line').forEach(l => { l.classList.remove('on'); l.removeAttribute('marker-end'); l.removeAttribute('marker-start'); });
+    qa('.pf-node').forEach(n => n.classList.toggle('on', n.dataset.n === s.from || n.dataset.n === s.to));
+    qa('#pf-steps button').forEach((b, j) => b.classList.toggle('on', j === i));
+    const line = q(`#pf-lines line[data-l="${s.l}"]`); line.classList.add('on');
+    line.setAttribute(s.rev ? 'marker-start' : 'marker-end', 'url(#pf-tip)');
+    let x1 = +line.getAttribute('x1'), y1 = +line.getAttribute('y1'), x2 = +line.getAttribute('x2'), y2 = +line.getAttribute('y2');
+    if (s.rev) [x1, y1, x2, y2] = [x2, y2, x1, y1];
+    q('#pf-dottext').textContent = s.pkt; q('#pf-when').textContent = s.when; q('#pf-text').textContent = `${i + 1}. ${s.txt}`;
+    const w = Math.max(70, s.pkt.length * 9 + 26); q('#pf-dotbg').setAttribute('x', -w / 2); q('#pf-dotbg').setAttribute('width', w);
+    cancelAnimationFrame(raf); const t0 = performance.now(), D = 1300;
+    const step = t => { const p = Math.min(1, (t - t0) / D), e = p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+      dot.setAttribute('transform', `translate(${x1 + (x2 - x1) * e},${y1 + (y2 - y1) * e})`); dot.style.opacity = p > .97 ? 1 - (p - .97) * 20 : 1;
+      if (p < 1) raf = requestAnimationFrame(step); };
+    raf = requestAnimationFrame(step);
+  }
+  function loop() { clearInterval(timer); if (playing) timer = setInterval(() => show(i + 1), 3400); }
+  steps.onclick = e => { const b = e.target.closest('button'); if (b) { show(+b.dataset.i); loop(); } };
+  q('#pf-play').onclick = () => { playing = !playing; q('#pf-play').textContent = playing ? '❚❚' : '▶'; loop(); };
+  show(0); loop();
+})();
+</script>
 </section>
-<section id="built-on-our-sponsors" class="slide level2">
-<h2>Built on our sponsors: Fidelity × n8n</h2>
+<section id="built-on-fidelity-n8n" class="slide level2">
+<h2>Built on Fidelity × n8n</h2>
 <div class="sponsors">
-  <div class="sp fid"><span class="chip fid">Sponsor</span><div class="name">Fidelity</div><div class="role">The data and the question</div><ul><li>The four ETFs inside <b>FCCA</b>: FCCL, FCCV, FCCQ, FCCM</li><li><b>Full holdings list</b> from Fidelity's product data: 269 holdings, weights summing to ~100%</li><li>Refreshed on day 1 of every month, so the report always matches the fund</li><li>The report answers the question Fidelity's page leaves open: <i>how is each holding doing?</i></li></ul></div>
-  <div class="sp n8n"><span class="chip n8n">Sponsor</span><div class="name">n8n</div><div class="role">The engine that runs everything</div><ul><li><b>4 workflows</b>: 2 scheduled, 2 AI agents</li><li><b>AI Agent node</b> with tools: Postgres queries and a Fidelity fetch sub-workflow</li><li><b>Schedule Trigger</b> runs the monthly cycle with no manual steps</li><li><b>HTTP Request</b> batching keeps within the free price API limit (25 a day)</li></ul></div>
+  <div class="sp fid"><div class="name">Fidelity</div><div class="role">The data and the question</div><ul><li>The four ETFs inside <b>FCCA</b>: FCCL, FCCV, FCCQ, FCCM</li><li><b>Full holdings list</b> from Fidelity's product data: 269 holdings, weights summing to ~100%</li><li>Refreshed on day 1 of every month, so the report always matches the fund</li><li>The report answers the question Fidelity's page leaves open: <i>how is each holding doing?</i></li></ul></div>
+  <div class="sp n8n"><div class="name">n8n</div><div class="role">The engine that runs everything</div><ul><li><b>4 workflows</b>: 2 scheduled, 2 AI agents</li><li><b>AI Agent node</b> with tools: Postgres queries and a Fidelity fetch sub-workflow</li><li><b>Schedule Trigger</b> runs the monthly cycle with no manual steps</li><li><b>HTTP Request</b> batching keeps within the free price API limit (25 a day)</li></ul></div>
 </div>
 </section>
 <section id="how-it-runs-every-month" class="slide level2">
@@ -163,7 +213,7 @@ returns, contribution · Delivery: live web dashboard</small></p>
 <div class="timeline">
   <div class="step"><div class="d">Day 1</div><b>Holdings refresh</b><br>Downloads the latest holdings of FCCL, FCCV, FCCQ and FCCM from Fidelity (269 holdings) and reuses the tickers it already knows.</div>
   <div class="step"><div class="d">Days 2–7</div><b>Price collection</b><br>Gets month-end prices for ~24 companies a day (the free API allows 25 a day). Six days cover all 117 companies.</div>
-  <div class="step"><div class="d">Any time</div><b>Report and dashboard</b><br>The Returns Agent writes the summary; the dashboard reads live data from Supabase on every visit.</div>
+  <div class="step"><div class="d">Any time</div><b>Report and dashboard</b><br>The Returns Agent writes the summary; the dashboard reads live data from Postgres on every visit.</div>
 </div>
 <p><br></p>
 <table>
@@ -323,8 +373,7 @@ hand every month to a report that builds itself.</li>
 <li><strong>Built to be trusted</strong>: missing data is shown as
 <em>n/a</em>, never guessed; AI-assigned tickers are marked
 <em>unverified</em> until a price confirms them.</li>
-<li><strong>Accessible</strong>: runs entirely on free tiers (n8n,
-Supabase, Alpha Vantage, Gemini Flash-Lite, Netlify).</li>
+<li><strong>Accessible</strong>: runs entirely on free tiers (n8n, Postgres, Alpha Vantage, Gemini Flash-Lite, Netlify).</li>
 </ul>
 </section>
 <section id="limitations-honestly" class="slide level2">
@@ -396,7 +445,7 @@ href="https://chimerical-arithmetic-142fdb.netlify.app"
 class="uri">https://chimerical-arithmetic-142fdb.netlify.app</a></p>
 <p>Code: <a href="https://github.com/itsluismario/ETF-agent-report"
 class="uri">https://github.com/itsluismario/ETF-agent-report</a></p>
-<div class="powered"><span>Built with</span><span class="chip fid big">Fidelity</span><span>data · orchestrated by</span><span class="chip n8n big">n8n</span></div>
+<div class="powered">Built with Fidelity data · orchestrated by n8n</div>
 <p><small class="muted">Information only, not investment advice. Data:
 Fidelity Canada product data, Alpha Vantage.</small></p>
 </section>
