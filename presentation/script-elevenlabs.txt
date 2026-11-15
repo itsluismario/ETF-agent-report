@@ -2,7 +2,7 @@
 Hi, we're Linh Dan Ngo, Evan Lin, Dylan Li and Luis Mario. <break time="0.3s" /> This is ETF Agent Report: a monthly report that explains what is driving a Fidelity ETF, holding by holding.
 
 ===== CLIP 2 · 0:12 – 0:30 · The problem =====
-Fidelity's Investly app helps people invest in ETFs. <break time="0.3s" /> But once the money is in, most clients stop paying attention. The fund page shows only names and weights, and in Canada, forty-four percent of people score low on basic investment knowledge. <break time="0.3s" /> And pushing them to trade isn't the answer: the most active traders earn less.
+Fidelity's Investly app helps people invest in ETFs. <break time="0.3s" /> But once the money is in, most clients stop paying attention. The fund page shows only names and weights. <break time="0.3s" /> Research shows that investors who understand why their investments moved stay more loyal, while those who trade more earn less.
 
 ===== CLIP 3 · 0:30 – 0:42 · Goal and scope =====
 Our goal: keep ETF investors involved every month, without asking them to trade. <break time="0.3s" /> Each month they get a report on their own ETF: which companies moved it, and by how much.

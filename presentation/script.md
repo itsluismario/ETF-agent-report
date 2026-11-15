@@ -20,7 +20,7 @@ Each block shows the time window, what is on screen, and the narration to paste 
 
 **On screen:** "The problem" (Fidelity holdings screenshot + what is missing).
 
-> Fidelity's Investly app helps people invest in ETFs. <break time="0.3s" /> But once the money is in, most clients stop paying attention. The fund page shows only names and weights, and in Canada, forty-four percent of people score low on basic investment knowledge. <break time="0.3s" /> And pushing them to trade isn't the answer: the most active traders earn less.
+> Fidelity's Investly app helps people invest in ETFs. <break time="0.3s" /> But once the money is in, most clients stop paying attention. The fund page shows only names and weights. <break time="0.3s" /> Research shows that investors who understand why their investments moved stay more loyal, while those who trade more earn less.
 
 ---
 
