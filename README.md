@@ -54,7 +54,7 @@ Returns (quarterly, annual, YTD) and contributions (weight × return) are not fe
 
 ## Engineering highlights
 
-- **Full holdings, not the top 10**: uses Fidelity's product data behind the "View all" holdings listing; weights sum to ~100%.
+- **Performance Fidelity doesn't show**: Fidelity lists every holding and its weight; we add each company's quarterly, annual and YTD returns, computed in SQL from monthly prices.
 - **Works within free limits**: a price queue respects Alpha Vantage's 25 requests/day, and the agents use 2 model requests per run.
 - **Correct returns**: stock splits are detected from adjusted vs. raw prices (Loblaw showed −67% before the fix and +31.20% after it).
 - **Honest data**: missing values are shown as *n/a*, never estimated.
