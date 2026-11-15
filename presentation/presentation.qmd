@@ -4,7 +4,6 @@ subtitle: "A monthly report that explains what is driving a Fidelity ETF, holdin
 author:
   - "Linh Dan Ngo"
   - "Evan Lin"
-  - "Dylan Li"
   - "Luis Mario"
 date: "November 2026"
 format:
@@ -198,7 +197,7 @@ format:
 
 **ETF Agent Report**
 
-Linh Dan Ngo · Evan Lin · Dylan Li · Luis Mario
+Linh Dan Ngo · Evan Lin · Luis Mario
 
 Live dashboard: <https://chimerical-arithmetic-142fdb.netlify.app>
 

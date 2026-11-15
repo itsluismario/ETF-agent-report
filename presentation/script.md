@@ -12,7 +12,7 @@ Each block shows the time window, what is on screen, and the narration to paste 
 
 **On screen:** title slide.
 
-> Hi, we're Linh Dan Ngo, Evan Lin, Dylan Li and Luis Mario. <break time="0.3s" /> This is ETF Agent Report: a monthly report that explains what is driving a Fidelity ETF, holding by holding.
+> Hi, we're Linh Dan Ngo, Evan Lin and Luis Mario. <break time="0.3s" /> This is ETF Agent Report: a monthly report that explains what is driving a Fidelity ETF, holding by holding.
 
 ---
 
