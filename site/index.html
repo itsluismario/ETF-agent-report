@@ -9,12 +9,12 @@
   :root {
     --bg: #f5f6f8; --panel: #ffffff; --ink: #111827; --muted: #6b7280; --faint: #9ca3af; --line: #e5e7eb;
     --accent: #2453d4; --accent-soft: #e8eefc; --pos: #0e7a3e; --pos-soft: #dcf3e5; --neg: #c42b33; --neg-soft: #fbe3e4;
-    --head: #f9fafb; --shadow: 0 1px 2px rgba(16,24,40,.04), 0 1px 3px rgba(16,24,40,.06);
+    --tm-zero: #d9dee6; --tm-na: #c9ced6; --head: #f9fafb; --shadow: 0 1px 2px rgba(16,24,40,.04), 0 1px 3px rgba(16,24,40,.06);
   }
   @media (prefers-color-scheme: dark) {
     :root { --bg: #0d1117; --panel: #151b23; --ink: #e6e8eb; --muted: #9aa4b2; --faint: #6b7280; --line: #262d38;
             --accent: #7aa2ff; --accent-soft: #1b2540; --pos: #45c27a; --pos-soft: #12301f; --neg: #f2707a; --neg-soft: #3a1a1e;
-            --head: #19202a; --shadow: none; }
+            --tm-zero: #2b3442; --tm-na: #39404c; --head: #19202a; --shadow: none; }
   }
   * { box-sizing: border-box; }
   body { margin: 0; font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--ink); }
@@ -82,6 +82,23 @@
   .wbar { display: inline-block; width: 36px; height: 5px; background: var(--line); border-radius: 99px; margin-left: 8px; vertical-align: middle; overflow: hidden; }
   .wbar > span { display: block; height: 100%; background: var(--accent); }
 
+  .tmcard { margin-bottom: 18px; }
+  .tmcard .toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; padding: 14px 16px 10px; }
+  .tmcard h2 { padding: 0; font-size: 15px; }
+  .tmcard .meta { color: var(--muted); font-size: 12.5px; }
+  .tmcard select { padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); font: inherit; }
+  .legend { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12px; }
+  .legend .grad { width: 160px; height: 8px; border-radius: 99px; background: linear-gradient(90deg, rgb(196,43,51), var(--tm-zero), rgb(14,122,62)); }
+  .legend .nobox { width: 12px; height: 12px; border-radius: 3px; background: var(--tm-na); display: inline-block; }
+  .tm { position: relative; height: 460px; margin: 0 16px 16px; border-radius: 10px; overflow: hidden; }
+  .tm .cell { position: absolute; box-sizing: border-box; border: 1.5px solid var(--panel); border-radius: 4px; overflow: hidden; padding: 6px 7px; cursor: pointer; transition: filter .12s; }
+  .tm .cell:hover { filter: brightness(1.15); outline: 2px solid var(--ink); outline-offset: -2px; z-index: 2; }
+  .tm .cell .t { font-weight: 700; font-size: 13px; line-height: 1.1; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .tm .cell .r { font-size: 12.5px; font-weight: 600; margin-top: 2px; font-variant-numeric: tabular-nums; }
+  .tm .cell .n { font-size: 11px; opacity: .85; margin-top: 3px; line-height: 1.2; }
+  .tmtip { position: fixed; z-index: 50; pointer-events: none; background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; font-size: 12.5px; box-shadow: 0 8px 30px rgba(0,0,0,.35); max-width: 260px; display: none; }
+  .tmtip b { display: block; margin-bottom: 4px; }
+  @media (max-width: 640px) { .tm { height: 340px; } }
   details.narrative { margin-top: 18px; }
   details.narrative summary { cursor: pointer; padding: 14px 16px; font-weight: 600; color: var(--muted); }
   details.narrative .body { padding: 0 16px 16px; color: var(--ink); }
@@ -163,6 +180,7 @@ function md(text) {  // small, safe Markdown subset for the agent narrative
 }
 
 let DATA = null, current = null, cols = [], sort = { key: 'weightPct', dir: -1 }, query = '', showNonEq = false;
+let tmPeriod = null;
 
 function periodCols(etfs) {
   const all = new Set();
@@ -228,11 +246,85 @@ function render() {
   const r = DATA.latestReport;
   const narrative = r && r.summary ? `<details class="card narrative"><summary>Agent narrative · generated ${esc(new Date(r.createdAt).toLocaleString('en-CA'))}</summary><div class="body">${md(r.summary)}</div></details>` : '';
 
-  $('app').innerHTML = kpis + cards + table + narrative;
+  if (!tmPeriod || !cols.includes(tmPeriod)) tmPeriod = cols.find(c => /YTD$/.test(c)) || cols[cols.length - 1];
+  const treemap = `<section class="card tmcard">
+    <div class="toolbar">
+      <div><h2>Fund map</h2><div class="meta">Box size = weight in ${esc(etf.etf)} · colour = return · click a box to find it in the table</div></div>
+      <div class="controls">
+        <div class="legend"><span>−30%</span><span class="grad"></span><span>+30%</span><span class="nobox"></span><span>no price yet</span></div>
+        <select id="tmPeriod" aria-label="Period used for the colour">${cols.map(c => `<option value="${esc(c)}" ${c === tmPeriod ? 'selected' : ''}>${esc(periodLabel(c))}</option>`).join('')}</select>
+      </div>
+    </div>
+    <div class="tm" id="tm" role="img" aria-label="Treemap of ${esc(etf.etf)} holdings sized by weight and coloured by return"></div>
+  </section>`;
+  $('app').innerHTML = kpis + cards + treemap + table + narrative;
+  $('tmPeriod').onchange = e => { tmPeriod = e.target.value; drawTreemap(); };
+  drawTreemap();
   $('search').oninput = e => { query = e.target.value; renderTable(); };
   $('noneq').onchange = e => { showNonEq = e.target.checked; renderTable(); };
   renderTable();
 }
+
+// --- Treemap: squarified layout, area = weight, colour = return for the chosen period ---
+function squarify(items, x, y, w, h) {
+  const out = [], total = items.reduce((t, it) => t + it.v, 0);
+  if (!total || w <= 0 || h <= 0) return out;
+  const scale = (w * h) / total, list = items.map(it => ({ ...it, a: it.v * scale }));
+  let row = [], i = 0;
+  const worst = (r, side) => { const sum = r.reduce((t, it) => t + it.a, 0); const mx = Math.max(...r.map(it => it.a)), mn = Math.min(...r.map(it => it.a));
+    return Math.max(side * side * mx / (sum * sum), (sum * sum) / (side * side * mn)); };
+  const layout = () => {
+    const sum = row.reduce((t, it) => t + it.a, 0);
+    if (w >= h) { const cw = sum / h; let cy = y; row.forEach(it => { const rh = it.a / cw; out.push({ ...it, x, y: cy, w: cw, h: rh }); cy += rh; }); x += cw; w -= cw; }
+    else { const rh = sum / w; let cx = x; row.forEach(it => { const rw = it.a / rh; out.push({ ...it, x: cx, y, w: rw, h: rh }); cx += rw; }); y += rh; h -= rh; }
+    row = [];
+  };
+  while (i < list.length) {
+    const side = Math.min(w, h);
+    if (!row.length || worst(row.concat(list[i]), side) <= worst(row, side)) { row.push(list[i]); i++; } else layout();
+  }
+  if (row.length) layout();
+  return out;
+}
+function hexRgb(h) { h = h.trim().replace('#', ''); if (h.length === 3) h = h.split('').map(c => c + c).join(''); const n = parseInt(h, 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
+function tmColor(v) {
+  const cs = getComputedStyle(document.documentElement);
+  if (!isNum(v)) return { bg: cs.getPropertyValue('--tm-na').trim() || '#39404c', fg: 'var(--muted)', k: 0 };
+  const zero = hexRgb(cs.getPropertyValue('--tm-zero') || '#2b3442'), end = v >= 0 ? [14, 122, 62] : [196, 43, 51];
+  const k = Math.min(1, Math.abs(v) / 30) * 0.85 + (v === 0 ? 0 : 0.15);
+  const c = zero.map((z, i) => Math.round(z + (end[i] - z) * k));
+  const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+  return { bg: `rgb(${c.join(',')})`, fg: dark || k > 0.45 ? '#fff' : '#111827', k };
+}
+function drawTreemap() {
+  const box = $('tm'); if (!box) return;
+  const etf = (DATA.etfs || []).find(e => e.etf === current);
+  const items = (etf.rows || []).filter(r => r.isEquity !== false && Number(r.weightPct) > 0)
+    .map(r => ({ v: Number(r.weightPct), r })).sort((a, b) => b.v - a.v);
+  const W = box.clientWidth, H = box.clientHeight;
+  const cells = squarify(items, 0, 0, W, H);
+  box.innerHTML = cells.map((c, i) => {
+    const r = c.r, ret = (r.returns || {})[tmPeriod], col = tmColor(ret);
+    const big = c.w > 70 && c.h > 38, huge = c.w > 120 && c.h > 70;
+    return `<div class="cell" data-i="${i}" style="left:${c.x.toFixed(1)}px;top:${c.y.toFixed(1)}px;width:${c.w.toFixed(1)}px;height:${c.h.toFixed(1)}px;background:${col.bg};color:${col.fg}">` +
+      (big ? `<div class="t">${esc(r.ticker || '—')}</div><div class="r">${isNum(ret) ? sign(ret) + '%' : 'n/a'}</div>` : '') +
+      (huge ? `<div class="n">${esc(nice(r.company))}</div>` : '') + '</div>';
+  }).join('');
+  let tip = document.getElementById('tmtip');
+  if (!tip) { tip = document.createElement('div'); tip.id = 'tmtip'; tip.className = 'tmtip'; document.body.appendChild(tip); }
+  box.querySelectorAll('.cell').forEach(el => {
+    const c = cells[+el.dataset.i], r = c.r, ret = (r.returns || {})[tmPeriod];
+    const contrib = isNum(ret) ? Number(r.weightPct) * ret / 100 : null;
+    el.onmousemove = e => {
+      tip.innerHTML = `<b>${esc(nice(r.company))} <span class="tick">${esc(r.ticker || '')}</span></b>Weight: ${Number(r.weightPct).toFixed(2)}%<br>${esc(periodLabel(tmPeriod))}: ${isNum(ret) ? `<span class="${ret >= 0 ? 'pos' : 'neg'}">${sign(ret)}%</span>` : 'no price yet'}<br>Contribution: ${isNum(contrib) ? sign(contrib) + ' pts' : 'n/a'}`;
+      tip.style.display = 'block';
+      tip.style.left = Math.min(e.clientX + 14, innerWidth - 280) + 'px'; tip.style.top = (e.clientY + 14) + 'px';
+    };
+    el.onmouseleave = () => { tip.style.display = 'none'; };
+    el.onclick = () => { query = r.ticker || nice(r.company); const s = $('search'); if (s) s.value = query; renderTable(); document.querySelector('.tablecard').scrollIntoView({ behavior: 'smooth', block: 'start' }); };
+  });
+}
+let tmResize; addEventListener('resize', () => { clearTimeout(tmResize); tmResize = setTimeout(() => DATA && drawTreemap(), 150); });
 
 function renderTable() {
   const etf = (DATA.etfs || []).find(e => e.etf === current);

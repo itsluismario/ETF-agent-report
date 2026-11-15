@@ -2,7 +2,8 @@
 
 **A monthly report that shows what is driving a Fidelity ETF, holding by holding.**
 
-Live dashboard: <https://chimerical-arithmetic-142fdb.netlify.app> · Slides: [`presentation/`](presentation/)
+**Live dashboard:** <https://chimerical-arithmetic-142fdb.netlify.app>  
+**Slides:** <https://itsluismario.github.io/ETF-agent-report/presentation/presentation-preview.html>
 
 ## The problem
 
