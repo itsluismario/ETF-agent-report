@@ -62,6 +62,29 @@ Build a **monthly report** that shows, for every company in the ETF, its histori
 ## The solution in one picture
 
 ```{=html}
+<style>
+#pflow { margin-top: 4px; }
+#pflow .pf-svg { width: 100%; height: auto; display: block; font-family: inherit; }
+#pflow .pf-group { fill: rgba(255,255,255,.03); stroke: #8a94a6; stroke-width: 2; stroke-dasharray: 6 5; }
+#pflow .pf-grouplabel { fill: #c3cad6; font-size: 17px; font-weight: 600; }
+#pflow #pf-lines line { stroke: #6b7689; stroke-width: 3; transition: stroke .3s; }
+#pflow #pf-lines line.on { stroke: #ffd166; stroke-width: 5; }
+#pflow .pf-tipfill { fill: #ffd166; }
+#pflow .pf-node rect { fill: #262f3d; stroke: #6b7689; stroke-width: 2; transition: all .3s; }
+#pflow .pf-node text { text-anchor: middle; }
+#pflow .pf-node .t { fill: #ffffff; font-size: 24px; font-weight: 800; }
+#pflow .pf-node .s { fill: #c3cad6; font-size: 16px; }
+#pflow .pf-node.on rect { fill: #34405a; stroke: #ffd166; stroke-width: 4; filter: drop-shadow(0 0 12px rgba(255,209,102,.45)); }
+#pflow #pf-dotbg { fill: #ffd166; }
+#pflow #pf-dottext { fill: #1b1b1b; font-size: 14px; font-weight: 800; text-anchor: middle; }
+#pflow .pf-bar { display: flex; justify-content: space-between; align-items: center; gap: 18px; margin-top: 12px; font-size: 0.7em; }
+#pflow .pf-cap { flex: 1; min-height: 2.6em; line-height: 1.35; color: #fff; }
+#pflow .pf-when { display: inline-block; background: #ffd166; color: #1b1b1b; font-weight: 800; border-radius: 99px; padding: 1px 10px; margin-right: 10px; font-size: .9em; }
+#pflow .pf-ctl { display: flex; gap: 5px; align-items: center; white-space: nowrap; }
+#pflow .pf-ctl button { width: 30px; height: 30px; border-radius: 99px; border: 1px solid #6b7689; background: #262f3d; color: #c3cad6; font-weight: 700; font-size: 14px; line-height: 1; cursor: pointer; padding: 0; }
+#pflow .pf-ctl button.on { background: #ffd166; color: #1b1b1b; border-color: #ffd166; }
+#pflow #pf-play { margin-left: 8px; width: 38px; }
+</style>
 <div class="pflow" id="pflow">
 <svg viewBox="0 0 1160 470" class="pf-svg" role="img" aria-label="Animated data flow: Fidelity and Alpha Vantage feed n8n workflows, which store everything in Postgres; the dashboard reads Postgres">
   <defs><marker id="pf-tip" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="14" markerHeight="14" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="pf-tipfill"/></marker></defs>
