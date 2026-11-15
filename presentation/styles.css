@@ -122,3 +122,17 @@
 .pf-node.on rect { stroke: var(--ink); stroke-width: 3; }
 .sponsors .sp.fid, .sponsors .sp.n8n { border: 1px solid var(--line); background: var(--panel); }
 .sponsors .fid .name, .sponsors .n8n .name { color: var(--ink); font-size: 1.7em; }
+
+/* higher contrast for the animated flow (was too dark on the projector) */
+.pf-node rect, .pf-node.fid rect, .pf-node.n8n rect, .pf-node.db rect, .pf-node.src rect, .pf-node.web rect { fill: #262f3d; stroke: #6b7689; stroke-width: 2; }
+.pf-node .t, .pf-node.fid .t, .pf-node.n8n .t, .pf-node.db .t { fill: #ffffff; font-size: 24px; }
+.pf-node .s { fill: #c3cad6; font-size: 16px; }
+.pf-node.on rect { fill: #34405a; stroke: #ffd166; stroke-width: 4; filter: drop-shadow(0 0 12px rgba(255,209,102,.45)); }
+#pf-lines line { stroke: #6b7689; stroke-width: 3; }
+#pf-lines line.on { stroke: #ffd166; stroke-width: 5; }
+.pf-tipfill { fill: #ffd166; }
+.pf-group { stroke: #8a94a6; stroke-width: 2; fill: rgba(255,255,255,.03); }
+.pf-grouplabel { fill: #c3cad6; font-size: 17px; }
+.pf-bar { font-size: 0.7em; }
+.pf-cap { color: #ffffff; }
+.pf-ctl button { color: #c3cad6; border-color: #6b7689; background: #262f3d; }
