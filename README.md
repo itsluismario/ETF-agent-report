@@ -40,7 +40,19 @@ Netlify (site/index.html) ──► Supabase get_public_report() (read-only, liv
 | Prices – monthly Alpha Vantage fetch | Scheduled, days 2–7 | Month-end prices for ~24 companies a day (free key: 25/day); returns computed in SQL, adjusted for stock splits |
 | ETF Returns Agent | AI agent (Gemini Flash-Lite) | Writes a short summary of top / lowest contributors for the dashboard |
 
-### Engineering highlights
+## Data sources
+
+| Data | Service / API | Endpoint | Cost & limits |
+|---|---|---|---|
+| ETF holdings (company, weight %, market value, as-of date) | **Fidelity Canada product API** (the data behind the "View all" holdings on fidelity.ca) | `GET https://fidcaproductsapi.fidelity.ca/FidcaProductsAPI/api/fundPage/fund/EN/{ETF}` → `holdingsByCategory` | Free, no key. Called once a month per ETF |
+| Stock prices (month-end close and adjusted close) | **[Alpha Vantage](https://www.alphavantage.co/)** | `GET https://www.alphavantage.co/query?function=TIME_SERIES_MONTHLY_ADJUSTED&symbol={TICKER}.TRT&apikey=…` | Free key: 25 requests/day, 5/minute. TSX tickers use the `.TRT` suffix; class shares use a dash (`CTC-A.TRT`). Prices are kept in the currency the API returns (CAD for TSX listings) |
+| Company name → ticker mapping | **Google Gemini** (`gemini-3.5-flash-lite`, free tier) via the n8n AI Agent | Gemini API | Free tier. Tickers are marked "unverified" until Alpha Vantage returns a price for them |
+| Storage and the public data endpoint | **[Supabase](https://supabase.com/)** (Postgres + PostgREST) | `POST /rest/v1/rpc/get_public_report` | Free tier |
+| Website hosting | **[Netlify](https://www.netlify.com/)** | — | Free tier |
+
+Returns (quarterly, annual, YTD) and contributions (weight × return) are not fetched from any service. They are calculated in SQL from the monthly prices.
+
+## Engineering highlights
 
 - **Full holdings, not the top 10**: uses Fidelity's product data behind the "View all" holdings listing; weights sum to ~100%.
 - **Works within free limits**: a price queue respects Alpha Vantage's 25 requests/day, and the agents use 2 model requests per run.
