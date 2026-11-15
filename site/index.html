@@ -103,18 +103,23 @@
   .askcard .toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; padding: 14px 16px 10px; }
   .askcard h2 { padding: 0; font-size: 15px; }
   .askcard .meta { color: var(--muted); font-size: 12.5px; }
-  .askbtns { display: flex; gap: 8px; flex-wrap: wrap; padding: 0 16px 14px; }
-  .askbtn { border: 1px solid var(--line); background: var(--bg); color: var(--ink); padding: 9px 15px; border-radius: 99px; cursor: pointer; font: inherit; font-weight: 600; }
-  .askbtn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
-  .askbtn:disabled { opacity: .5; cursor: wait; }
-  .askout { padding: 0 16px 16px; }
-  .askout:empty { display: none; }
-  .askout .q { color: var(--muted); font-size: 12.5px; margin-bottom: 8px; }
-  .askout .ans { border-left: 3px solid var(--accent); padding: 4px 0 4px 14px; }
-  .askout .ans h3 { font-size: 14px; margin: 12px 0 6px; } .askout .ans ul, .askout .ans ol { margin: 4px 0 8px 20px; padding: 0; }
-  .askout .wait { color: var(--muted); display: flex; align-items: center; gap: 10px; }
+  .chatlog { margin: 0 16px; max-height: 460px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding: 4px 2px; }
+  .chatlog:empty { display: none; }
+  .msg { max-width: 88%; padding: 10px 14px; border-radius: 14px; line-height: 1.45; }
+  .msg.user { align-self: flex-end; background: var(--accent); color: #fff; border-bottom-right-radius: 4px; }
+  .msg.bot { align-self: flex-start; background: var(--bg); border: 1px solid var(--line); border-bottom-left-radius: 4px; }
+  .msg.bot p { margin: 4px 0; } .msg.bot h3 { font-size: 14px; margin: 10px 0 4px; } .msg.bot ul, .msg.bot ol { margin: 4px 0 6px 18px; padding: 0; }
+  .msg.err { color: var(--neg); }
+  .msg .wait { color: var(--muted); display: flex; align-items: center; gap: 10px; }
   .spin { width: 16px; height: 16px; border: 2px solid var(--line); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; padding: 12px 16px 0; }
+  .chip { border: 1px solid var(--line); background: var(--bg); color: var(--ink); padding: 7px 13px; border-radius: 99px; cursor: pointer; font: inherit; font-size: 13px; font-weight: 600; }
+  .chip:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+  .chip:disabled, .chatform button:disabled { opacity: .5; cursor: wait; }
+  .chatform { display: flex; gap: 8px; padding: 12px 16px 16px; }
+  .chatform input { flex: 1; padding: 10px 14px; border: 1px solid var(--line); border-radius: 99px; background: var(--bg); color: var(--ink); font: inherit; }
+  .chatform button { border: 0; background: var(--accent); color: #fff; padding: 10px 18px; border-radius: 99px; font: inherit; font-weight: 700; cursor: pointer; }
   details.narrative { margin-top: 18px; }
   details.narrative summary { cursor: pointer; padding: 14px 16px; font-weight: 600; color: var(--muted); }
   details.narrative .body { padding: 0 16px 16px; color: var(--ink); }
@@ -197,38 +202,49 @@ function md(text) {  // small, safe Markdown subset for the agent narrative
 
 let DATA = null, current = null, cols = [], sort = { key: 'weightPct', dir: -1 }, query = '', showNonEq = false;
 let tmPeriod = null;
-// --- Ask the agent: preset questions sent to the n8n Returns Agent (chat webhook) ---
+// --- Ask the agent: chat with suggested questions, answered by the n8n Returns Agent (chat webhook) ---
 const AGENT_URL = 'https://itsluismario.app.n8n.cloud/webhook/fe90436d-f14c-4571-91c9-281dabb20e9d/chat';
 const SESSION = 'web-' + Math.random().toString(36).slice(2);
-const ASK_LIMIT = 6;            // per page visit, to protect the free AI quota
-let asking = null, askCount = 0; const answers = {};
-const QUESTIONS = etf => [
-  ['Explain ' + etf + ' this year', 'Explain in plain language what drove ' + etf + ' this year: the 3 biggest contributors and the 3 biggest detractors, with weight, return and contribution. Keep it short.'],
-  ['Compare ' + etf + ' with its most similar ETF', 'Find the ETF most similar to ' + etf + ' and compare the two: overlap %, the biggest shared holdings, and which one did better this year. Keep it short.'],
-  ['What hurt ' + etf + ' last quarter?', 'Which holdings hurt ' + etf + ' the most in the last complete quarter, and by how much? Keep it short.']
-];
+const ASK_LIMIT = 10;           // messages per page visit, to protect the free AI quota
+let asking = false, askCount = 0; const chat = [];
+const SUGGESTIONS = etf => {
+  const others = ((DATA && DATA.etfs) || []).map(e => e.etf).filter(e => e !== etf);
+  return [
+    ['Explain ' + etf + ' this year', 'Explain in plain language what drove ' + etf + ' this year: the 3 biggest contributors and the 3 biggest detractors, with weight, return and contribution. Keep it short.'],
+    ['Compare ' + etf + ' with its most similar ETF', 'Find the ETF most similar to ' + etf + ' and compare the two: overlap %, the biggest shared holdings, and which one did better this year. Keep it short.'],
+    ['What hurt ' + etf + ' last quarter?', 'Which holdings hurt ' + etf + ' the most in the last complete quarter, and by how much? Keep it short.'],
+    ...(others[0] ? [['How much do ' + etf + ' and ' + others[0] + ' overlap?', 'How much do ' + etf + ' and ' + others[0] + ' overlap? Show the overlap %, the biggest shared holdings and the biggest holdings only in each. Keep it short.']] : []),
+    ['Which ETF did best this year?', 'Across FCCL, FCCV, FCCQ and FCCM, which had the highest approximate contribution this year from its priced holdings, and what drove it? Keep it short.']
+  ];
+};
+function msgHtml(m) {
+  if (m.role === 'user') return `<div class="msg user">${esc(m.text)}</div>`;
+  if (m.pending) return `<div class="msg bot"><div class="wait"><span class="spin"></span>The agent is reading the data… about 10–20 seconds.</div></div>`;
+  return `<div class="msg bot ${m.error ? 'err' : ''}">${m.error ? esc(m.error) : md(m.text)}</div>`;
+}
 function askHtml(etf) {
-  const a = answers[etf];
-  let out = '';
-  if (asking && asking.etf === etf) out = `<div class="q">${esc(asking.label)}</div><div class="wait"><span class="spin"></span>The agent is reading the data… this takes about 10–20 seconds.</div>`;
-  else if (a) out = `<div class="q">${esc(a.label)}</div><div class="ans">${a.error ? `<p class="error">${esc(a.error)}</p>` : md(a.text)}</div>`;
+  const off = asking || askCount >= ASK_LIMIT ? 'disabled' : '';
   return `<section class="card askcard">
-    <div class="toolbar"><div><h2>Ask the agent</h2><div class="meta">AI answer from the n8n Returns Agent, using the same data as this page · information only, not advice</div></div></div>
-    <div class="askbtns">${QUESTIONS(etf).map((q, i) => `<button class="askbtn" data-i="${i}" ${asking || askCount >= ASK_LIMIT ? 'disabled' : ''}>${esc(q[0])}</button>`).join('')}</div>
-    <div class="askout" id="askout">${out}</div>
+    <div class="toolbar"><div><h2>Ask the agent</h2><div class="meta">Chat with the n8n Returns Agent · it uses the same data as this page · information only, not advice</div></div></div>
+    <div class="chatlog" id="chatlog">${chat.map(msgHtml).join('')}</div>
+    <div class="chips">${SUGGESTIONS(etf).map((q, i) => `<button class="chip" data-i="${i}" ${off}>${esc(q[0])}</button>`).join('')}</div>
+    <form class="chatform" id="chatform"><input id="chatin" maxlength="300" placeholder="${askCount >= ASK_LIMIT ? 'Question limit for this visit reached' : 'Ask anything about ' + esc(etf) + ' or the other ETFs…'}" ${off} autocomplete="off"><button type="submit" ${off}>Send</button></form>
   </section>`;
 }
 function wireAsk() {
-  document.querySelectorAll('.askbtn').forEach(b => b.onclick = () => ask(+b.dataset.i));
+  document.querySelectorAll('.chip').forEach(b => b.onclick = () => { const q = SUGGESTIONS(current)[+b.dataset.i]; send(q[0], q[1]); });
+  const f = $('chatform'); if (f) f.onsubmit = e => { e.preventDefault(); const v = $('chatin').value.trim(); if (v) send(v, v); };
+  const log = $('chatlog'); if (log) log.scrollTop = log.scrollHeight;
 }
 function refreshAsk() {
   const old = document.querySelector('.askcard'); if (!old) return;
   old.outerHTML = askHtml(current); wireAsk();
 }
-async function ask(i) {
+async function send(label, prompt) {
   if (asking || askCount >= ASK_LIMIT) return;
-  const etf = current, [label, prompt] = QUESTIONS(etf)[i];
-  asking = { etf, label }; askCount++; refreshAsk();
+  asking = true; askCount++;
+  chat.push({ role: 'user', text: label });
+  const reply = { role: 'bot', pending: true }; chat.push(reply); refreshAsk();
   const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), 90000);
   try {
     const res = await fetch(AGENT_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: ctl.signal,
@@ -237,14 +253,12 @@ async function ask(i) {
     const j = await res.json(); const o = Array.isArray(j) ? j[0] : j;
     let text = (o && (o.output || o.text || (o.json && o.json.output))) || '';
     if (!text) throw new Error('the agent returned an empty answer');
-    text = text.replace(/\n*Full tables:.*$/s, '').trim();
-    answers[etf] = { label, text };
+    reply.text = text.replace(/\n*Full tables:.*$/s, '').trim();
   } catch (e) {
-    answers[etf] = { label, error: 'Could not get an answer (' + (e.name === 'AbortError' ? 'timed out' : e.message) + '). Please try again in a minute.' };
+    reply.error = 'Could not get an answer (' + (e.name === 'AbortError' ? 'timed out' : e.message) + '). Please try again in a minute.';
   } finally {
-    clearTimeout(timer); asking = null;
-    if (askCount >= ASK_LIMIT && !answers[etf].error) answers[etf].text += '\n\n(Question limit for this visit reached.)';
-    refreshAsk();
+    clearTimeout(timer); reply.pending = false; asking = false; refreshAsk();
+    const inp = $('chatin'); if (inp && !inp.disabled) inp.focus();
   }
 }
 
