@@ -44,7 +44,7 @@ Each block shows the time window, what is on screen, and the narration to paste 
 
 **On screen:** "Built on Fidelity × n8n".
 
-> Fidelity gives us the data and the question. <break time="0.2s" /> n8n is the engine: four workflows, two AI agents, and a monthly schedule with no manual steps.
+> Fidelity gives us the data and the question. <break time="0.2s" /> n8n is the engine: four workflows, two AI agents, a monthly schedule with no manual steps, and a chat that answers questions on the dashboard.
 
 ---
 
@@ -52,7 +52,7 @@ Each block shows the time window, what is on screen, and the narration to paste 
 
 **On screen:** slide 6 "Demo" shows only the dashboard link. Click it, do the demo, and come back to the presentation for slide 7.
 
-Before you start, have **n8n** (the project's workflow list) open in a browser tab. The link on slide 6 opens the dashboard.
+The link on slide 6 opens the dashboard. Do a test question in the chat a few minutes before presenting, so you know the agent is responding.
 
 | Time | Action on screen | Narration |
 |---|---|---|
@@ -60,8 +60,7 @@ Before you start, have **n8n** (the project's workflow list) open in a browser t
 | 1:17 – 1:27 | **Dashboard** on FCCL: point at the KPI cards and top contributors | > This is what you'd get every month. For FCCL you see the holdings, how much is priced, and who contributed most this year. |
 | 1:27 – 1:37 | Scroll to **Fund map**. Hover RY, then TD | > The fund map shows every holding: box size is its weight, colour is its return. Green is up, grey means no price yet. |
 | 1:37 – 1:47 | Click the **TD** box (the table filters), point at the YTD and Contrib. columns | > Click Toronto-Dominion Bank: up thirty-six percent this year with a four point six percent weight. That's one point six seven points for the fund. |
-| 1:47 – 1:51 | Clear the search, click the **FCCM** tab | > And the same view works for every ETF. |
-| 1:51 – 2:06 | Switch to the **n8n** tab and open "Prices – monthly Alpha Vantage fetch", then go back to the presentation (slide 7) | > And here's n8n: the Prices workflow runs on days two to seven, about twenty-four companies a day. |
+| 1:47 – 2:06 | Clear the search, scroll up to **Ask the agent**, click the chip **"Compare FCCL with its most similar ETF"**. The answer takes 10–20 s: if you record, cut the wait in editing; live, keep talking. Then go back to the presentation (slide 7) | > Have a question? Just ask. The n8n agent answers from the same data: FCCL's closest match is FCCQ, they share about half their weight, and FCCL did better this year. |
 
 Narration for ElevenLabs, as one block:
 
@@ -69,8 +68,7 @@ Narration for ElevenLabs, as one block:
 > This is what you'd get every month. For FCCL you see the holdings, how much is priced, and who contributed most this year. <break time="0.5s" />
 > The fund map shows every holding: box size is its weight, colour is its return. Green is up, grey means no price yet. <break time="0.5s" />
 > Click Toronto-Dominion Bank: up thirty-six percent this year with a four point six percent weight. That's one point six seven points for the fund. <break time="0.5s" />
-> And the same view works for every ETF. <break time="0.5s" />
-> And here's n8n: the Prices workflow runs on days two to seven, about twenty-four companies a day.
+> Have a question? Just ask. <break time="0.3s" /> The n8n agent answers from the same data: FCCL's closest match is FCCQ, they share about half their weight, and FCCL did better this year.
 
 ---
 
@@ -78,7 +76,7 @@ Narration for ElevenLabs, as one block:
 
 **On screen:** "Innovation and impact".
 
-> For the investor, it's a reason to come back every month and understand their money, with no trades and nothing at risk. <break time="0.3s" /> For Fidelity and Investly, the research points the same way. Finimize found that seventy-four percent of its customers would invest more with more chances to learn. <break time="0.3s" /> And for one asset manager studied by S S and C, twenty-one percent higher retention meant thirty-three percent more revenue. <break time="0.3s" /> All of it runs automatically, on data Fidelity already has.
+> For the investor, it's a reason to come back every month, understand their money and ask questions in plain English, with no trades and nothing at risk. <break time="0.3s" /> For Fidelity and Investly, the research points the same way. Finimize found that seventy-four percent of its customers would invest more with more chances to learn. <break time="0.3s" /> And for one asset manager studied by S S and C, twenty-one percent higher retention meant thirty-three percent more revenue. <break time="0.3s" /> All of it runs automatically, on data Fidelity already has.
 
 ---
 

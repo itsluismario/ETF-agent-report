@@ -50,6 +50,7 @@ format:
 <thead><tr><th>Feature</th><th>What the investor sees</th><th>Status</th></tr></thead>
 <tbody>
 <tr><td><strong>Performance by quarter and year</strong></td><td>Each company's return next to its weight, and its contribution to the fund</td><td><span class="tag done">LIVE</span></td></tr>
+<tr><td><strong>Ask the agent</strong></td><td>A chat on the dashboard with suggested questions, answered in plain English by the n8n AI agent</td><td><span class="tag done">LIVE</span></td></tr>
 <tr><td><strong>News and sentiment</strong></td><td>Last month's key news per company, rated <em>Very good / Good / Bad / Very bad</em>, with a source link</td><td><span class="tag next">NEXT</span></td></tr>
 </tbody>
 </table>
@@ -156,7 +157,7 @@ format:
 ```{=html}
 <div class="sponsors">
   <div class="sp fid"><div class="name">Fidelity</div><div class="role">The data and the question</div><ul><li>The four ETFs inside <b>FCCA</b>: FCCL, FCCV, FCCQ, FCCM</li><li><b>Full holdings list</b> from Fidelity's product data: 269 holdings, weights summing to ~100%</li><li>Refreshed on day 1 of every month, so the report always matches the fund</li><li>The report answers the question Fidelity's page leaves open: <i>how is each holding doing?</i></li></ul></div>
-  <div class="sp n8n"><div class="name">n8n</div><div class="role">The engine that runs everything</div><ul><li><b>4 workflows</b>: 2 scheduled, 2 AI agents</li><li><b>AI Agent node</b> with tools: Postgres queries and a Fidelity fetch sub-workflow</li><li><b>Schedule Trigger</b> runs the monthly cycle with no manual steps</li><li><b>HTTP Request</b> batching keeps within the free price API limit (25 a day)</li></ul></div>
+  <div class="sp n8n"><div class="name">n8n</div><div class="role">The engine that runs everything</div><ul><li><b>4 workflows</b>: 2 scheduled, 2 AI agents</li><li><b>AI Agent + Chat Trigger</b>: powers "Ask the agent" on the dashboard, with Postgres tools (returns, similar ETFs, overlap)</li><li><b>Schedule Trigger</b> runs the monthly cycle with no manual steps</li><li><b>HTTP Request</b> batching keeps within the free price API limit (25 a day)</li></ul></div>
 </div>
 ```
 
@@ -177,6 +178,7 @@ format:
     <ul>
       <li>Understands <strong>who drives their fund</strong>: weight × return = each holding's contribution.</li>
       <li>A <strong>monthly reason to come back</strong>, with no trades needed and no money at risk.</li>
+      <li>Can <strong>ask questions in plain English</strong> and get answers from their own fund's data.</li>
       <li>Honest data: missing values show as <em>n/a</em>, never guessed.</li>
     </ul>
   </div>
