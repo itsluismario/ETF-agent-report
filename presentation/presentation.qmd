@@ -1,7 +1,9 @@
 ---
 title: "ETF Agent Report"
 subtitle: "A monthly report that explains what is driving a Fidelity ETF, holding by holding"
-author: "Luis Mario"
+author:
+  - "Luis Mario"
+  - "Evan Lin"
 date: "November 2026"
 format:
   revealjs:
@@ -275,6 +277,8 @@ Each row is a real problem we hit while building, not a hypothetical one.
 ## Thank you {.center}
 
 **ETF Agent Report**
+
+Luis Mario · Evan Lin
 
 Live dashboard: <https://chimerical-arithmetic-142fdb.netlify.app>
 
