@@ -1,0 +1,46 @@
+/* Shared styles for presentation.qmd (Quarto reveal.js) and the pandoc preview */
+:root {
+  --ink: #e6e8eb; --muted: #9aa4b2; --accent: #7aa2ff; --pos: #45c27a; --neg: #f2707a;
+  --panel: #151b23; --line: #2b3340; --violet: #b18cff;
+}
+.reveal { font-size: 30px; }
+.reveal .slides section { text-align: left; }
+.reveal h1, .reveal h2 { letter-spacing: -0.01em; text-transform: none; }
+.reveal h2 { font-size: 1.45em; margin-bottom: 0.5em; }
+.reveal .muted, .reveal small { color: var(--muted); }
+.reveal .accent { color: var(--accent); }
+.reveal .pos { color: var(--pos); font-weight: 600; }
+.reveal .neg { color: var(--neg); font-weight: 600; }
+.reveal .tag { display: inline-block; padding: 2px 12px; border-radius: 99px; font-size: 0.6em; font-weight: 700; vertical-align: middle; }
+.reveal .tag.done { background: rgba(69,194,122,.18); color: var(--pos); }
+.reveal .tag.next { background: rgba(177,140,255,.18); color: var(--violet); }
+.reveal .big { font-size: 2.2em; font-weight: 800; line-height: 1.05; }
+.reveal .lead { font-size: 1.15em; line-height: 1.4; }
+.reveal table { font-size: 0.8em; }
+.reveal table th { color: var(--muted); }
+.reveal img.shot { border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 10px 40px rgba(0,0,0,.45); }
+
+/* stat cards */
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 20px; }
+.stat { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; }
+.stat .n { font-size: 1.6em; font-weight: 800; color: var(--ink); }
+.stat .l { font-size: 0.62em; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+
+/* pipeline diagram */
+.flow { display: flex; align-items: stretch; gap: 10px; margin-top: 24px; }
+.flow .node { flex: 1; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 16px; font-size: 0.7em; line-height: 1.35; }
+.flow .node b { display: block; font-size: 1.25em; color: var(--accent); margin-bottom: 6px; }
+.flow .arrow { align-self: center; color: var(--muted); font-size: 1.1em; }
+
+/* timeline */
+.timeline { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 18px; }
+.timeline .step { border-top: 4px solid var(--accent); background: var(--panel); border-radius: 0 0 12px 12px; padding: 16px 18px; font-size: 0.72em; }
+.timeline .step .d { color: var(--accent); font-weight: 800; font-size: 1.3em; }
+
+/* criteria grid */
+.criteria { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.criteria .c { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; font-size: 0.72em; }
+.criteria .c b { color: var(--accent); font-size: 1.2em; }
+
+/* lets the pandoc preview honour Quarto's .smaller slides */
+.reveal .slides section.smaller { font-size: 0.82em; }

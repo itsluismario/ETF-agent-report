@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ETF Agent Report</title>
+<meta name="description" content="Holdings and quarterly / annual stock performance of Fidelity Canada ETFs (FCCL, FCCV, FCCQ), updated daily.">
+<style>
+  :root {
+    --bg: #f5f6f8; --panel: #ffffff; --ink: #111827; --muted: #6b7280; --faint: #9ca3af; --line: #e5e7eb;
+    --accent: #2453d4; --accent-soft: #e8eefc; --pos: #0e7a3e; --pos-soft: #dcf3e5; --neg: #c42b33; --neg-soft: #fbe3e4;
+    --head: #f9fafb; --shadow: 0 1px 2px rgba(16,24,40,.04), 0 1px 3px rgba(16,24,40,.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0d1117; --panel: #151b23; --ink: #e6e8eb; --muted: #9aa4b2; --faint: #6b7280; --line: #262d38;
+            --accent: #7aa2ff; --accent-soft: #1b2540; --pos: #45c27a; --pos-soft: #12301f; --neg: #f2707a; --neg-soft: #3a1a1e;
+            --head: #19202a; --shadow: none; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--ink); }
+  .wrap { max-width: 1680px; margin: 0 auto; padding: 32px 24px 64px; }
+  .num { font-variant-numeric: tabular-nums; }
+
+  header { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; justify-content: space-between; }
+  header h1 { margin: 0; font-size: 28px; letter-spacing: -0.02em; }
+  header p { margin: 4px 0 0; color: var(--muted); }
+  .updated { color: var(--muted); font-size: 13px; text-align: right; }
+  .updated b { color: var(--ink); font-weight: 600; }
+
+  .tabs { display: inline-flex; gap: 4px; padding: 4px; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; margin: 26px 0 18px; box-shadow: var(--shadow); }
+  .tab { border: 0; background: transparent; color: var(--muted); padding: 8px 18px; border-radius: 8px; cursor: pointer; font: inherit; font-weight: 650; letter-spacing: .02em; }
+  .tab:hover { color: var(--ink); }
+  .tab[aria-selected="true"] { background: var(--accent); color: #fff; }
+
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 18px; }
+  .kpi { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; box-shadow: var(--shadow); }
+  .kpi .k { color: var(--muted); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; }
+  .kpi .v { font-size: 24px; font-weight: 700; margin-top: 4px; letter-spacing: -0.01em; }
+  .kpi .s { color: var(--muted); font-size: 12px; margin-top: 2px; }
+  .meter { height: 6px; background: var(--line); border-radius: 99px; margin-top: 10px; overflow: hidden; }
+  .meter > span { display: block; height: 100%; background: var(--accent); border-radius: 99px; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin-bottom: 18px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); }
+  .card h2 { font-size: 13px; margin: 0; padding: 14px 16px 10px; display: flex; justify-content: space-between; align-items: baseline; }
+  .card h2 .period { color: var(--muted); font-weight: 500; font-size: 12px; }
+  .movers { list-style: none; margin: 0; padding: 0 16px 12px; }
+  .movers li { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; padding: 8px 0; border-top: 1px solid var(--line); }
+  .movers .name { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .movers .ret { text-align: right; font-weight: 600; }
+  .movers .sub { color: var(--muted); font-size: 12px; }
+  .movers .pts { text-align: right; font-size: 12px; color: var(--muted); }
+  .bar { grid-column: 1 / -1; height: 4px; background: var(--line); border-radius: 99px; overflow: hidden; }
+  .bar > span { display: block; height: 100%; border-radius: 99px; }
+  .bar.pos > span { background: var(--pos); } .bar.neg > span { background: var(--neg); }
+  .empty { color: var(--muted); padding: 4px 16px 16px; font-size: 13px; }
+
+  .tick { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; background: var(--accent-soft); color: var(--accent); padding: 1px 6px; border-radius: 5px; font-weight: 600; }
+  .pos { color: var(--pos); } .neg { color: var(--neg); } .na { color: var(--faint); }
+  .pill { display: inline-block; padding: 1px 8px; border-radius: 99px; font-weight: 600; }
+  .pill.pos { background: var(--pos-soft); } .pill.neg { background: var(--neg-soft); }
+
+  .tablecard .toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid var(--line); }
+  .tablecard h2 { padding: 0; font-size: 15px; }
+  .tablecard .meta { color: var(--muted); font-size: 12.5px; }
+  .tablecard .meta a { color: var(--accent); text-decoration: none; }
+  .controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .search { min-width: 230px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); font: inherit; }
+  .toggle { display: flex; gap: 6px; align-items: center; color: var(--muted); font-size: 13px; cursor: pointer; }
+  .tablewrap { overflow-x: auto; max-height: 70vh; }
+  table { border-collapse: separate; border-spacing: 0; width: 100%; }
+  th, td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: right; white-space: nowrap; font-size: 13px; }
+  th { position: sticky; top: 0; z-index: 1; background: var(--head); font-size: 11px; color: var(--muted); font-weight: 650; text-transform: uppercase; letter-spacing: .04em; cursor: pointer; user-select: none; }
+  th.l, td.l { text-align: left; }
+  th .arr { margin-left: 4px; }
+  th small { display: block; text-transform: none; letter-spacing: 0; font-weight: 500; color: var(--faint); }
+  td.company { white-space: normal; min-width: 170px; font-weight: 550; }
+  td.company .tick { margin-top: 3px; display: inline-block; }
+  td.company .cname { display: block; }
+  tbody tr:hover td { background: var(--head); }
+  tr.noneq td { color: var(--faint); font-weight: 400; }
+  .wbar { display: inline-block; width: 36px; height: 5px; background: var(--line); border-radius: 99px; margin-left: 8px; vertical-align: middle; overflow: hidden; }
+  .wbar > span { display: block; height: 100%; background: var(--accent); }
+
+  details.narrative { margin-top: 18px; }
+  details.narrative summary { cursor: pointer; padding: 14px 16px; font-weight: 600; color: var(--muted); }
+  details.narrative .body { padding: 0 16px 16px; color: var(--ink); }
+  details.narrative h3 { font-size: 14px; margin: 14px 0 6px; }
+  details.narrative ul, details.narrative ol { margin: 4px 0 8px 20px; padding: 0; }
+  details.narrative hr { border: 0; border-top: 1px solid var(--line); margin: 12px 0; }
+
+  .notes { color: var(--muted); font-size: 12.5px; margin: 22px 4px 0; padding: 0 0 0 18px; }
+  .notes li { margin: 4px 0; }
+  .state { padding: 60px 16px; text-align: center; color: var(--muted); }
+  .error { color: var(--neg); }
+  @media (max-width: 1100px) { .wbar { display: none; } th, td { padding: 7px 7px; } }
+  @media (max-width: 640px) { header h1 { font-size: 23px; } .updated { text-align: left; } .search { min-width: 0; width: 100%; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>ETF Agent Report</h1>
+      <p>Holdings and stock performance of Fidelity Canada ETFs · data refreshed monthly by n8n agents</p>
+    </div>
+    <div class="updated" id="updated"></div>
+  </header>
+
+  <div class="tabs" id="tabs" role="tablist" aria-label="ETF"></div>
+  <div id="app"><div class="state" id="state">Loading live data…</div></div>
+
+  <ul class="notes">
+    <li>Holdings and weights: Fidelity Canada product data (same list as the "View all" holdings on fidelity.ca).</li>
+    <li>Prices: Alpha Vantage month-end closes, in the currency returned by the API (CAD for TSX listings). Price returns, adjusted for stock splits.</li>
+    <li>Current quarter and YTD are partial periods. Contribution = today's weight × period return ÷ 100 — an approximation, not the fund's official return.</li>
+    <li>"n/a" = no price yet (prices are collected on days 2–7 of each month, about 24 companies per day) or not available from the price source.</li>
+    <li>Information only, not investment advice.</li>
+  </ul>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://lqudsqewhhcaofdeuqvv.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_juGIiaI9t6lCUJz_4Dg1ug_Mk8rhGwt'; // public key; only get_public_report() is exposed
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const isNum = v => v !== null && v !== undefined && v !== '' && !isNaN(v);
+const sign = v => (v > 0 ? '+' : '') + Number(v).toFixed(2);
+const pct = (v, cls = true) => !isNum(v) ? '<span class="na">n/a</span>' : `<span class="${cls ? (v > 0 ? 'pos' : v < 0 ? 'neg' : '') : ''}">${sign(v)}%</span>`;
+const fmtDate = d => !d ? 'n/a' : new Date(/^\d{4}-\d{2}-\d{2}$/.test(d) ? d + 'T12:00:00' : d).toLocaleDateString('en-CA', { year: 'numeric', month: 'short', day: 'numeric' });
+const periodLabel = p => !p ? '' : p.replace(/^(\d{4})Q(\d)$/, 'Q$2 $1').replace(/^(\d{4})YTD$/, '$1 YTD');
+
+// "ROYAL BANK OF CANADA" -> "Royal Bank of Canada"; drop listing noise like "DTC ELIGIBLE", "SUB VTG"
+const KEEP = new Set(['BCE', 'CGI', 'TMX', 'TC', 'CT', 'IGM', 'AGF', 'CCL', 'WSP', 'ATS', 'TFI', 'EQB', 'DPM', 'IA', 'B2GOLD', 'US', 'REIT', 'LP', 'II']);
+const SMALL = new Set(['OF', 'AND', 'THE', 'DE', 'DU', 'LA', 'ET']);
+function nice(name) {
+  let s = String(name || '').trim();
+  if (s !== s.toUpperCase()) return s;  // already mixed case
+  s = s.replace(/\b(DTC ELIGIBLE|PHYS DELIVERY|SUB[- ]?VTG|SUBORD(INATE)? VTG|NON[- ]?VTG|NONVTG|VTG)\b/g, '').replace(/\s{2,}/g, ' ').trim();
+  return s.split(' ').map((w, i) => {
+    if (KEEP.has(w)) return w;
+    if (i > 0 && SMALL.has(w)) return w.toLowerCase();
+    if (/^CL$/.test(w)) return 'Class';
+    return w.split('-').map(p => p.charAt(0) + p.slice(1).toLowerCase()).join('-');
+  }).join(' ');
+}
+
+function md(text) {  // small, safe Markdown subset for the agent narrative
+  const lines = esc(text).split('\n'); let html = '', list = null;
+  const close = () => { if (list) { html += `</${list}>`; list = null; } };
+  const inline = s => s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  for (const raw of lines) {
+    const l = raw.trim(); let m;
+    if (!l) { close(); continue; }
+    if (/^-{3,}$/.test(l)) { close(); html += '<hr>'; continue; }
+    if ((m = l.match(/^#{1,4}\s+(.*)$/))) { close(); html += `<h3>${inline(m[1])}</h3>`; continue; }
+    if ((m = l.match(/^[-*]\s+(.*)$/))) { if (list !== 'ul') { close(); html += '<ul>'; list = 'ul'; } html += `<li>${inline(m[1])}</li>`; continue; }
+    if ((m = l.match(/^\d+\.\s+(.*)$/))) { if (list !== 'ol') { close(); html += '<ol>'; list = 'ol'; } html += `<li>${inline(m[1])}</li>`; continue; }
+    close(); html += `<p>${inline(l)}</p>`;
+  }
+  close(); return html;
+}
+
+let DATA = null, current = null, cols = [], sort = { key: 'weightPct', dir: -1 }, query = '', showNonEq = false;
+
+function periodCols(etfs) {
+  const all = new Set();
+  etfs.forEach(e => (e.rows || []).forEach(r => Object.keys(r.returns || {}).forEach(p => all.add(p))));
+  const q = [...all].filter(p => /^\d{4}Q[1-4]$/.test(p)).sort().slice(-4);
+  const y = [...all].filter(p => /^\d{4}(YTD)?$/.test(p)).sort().slice(-3);
+  return [...q, ...y];
+}
+
+function movers(title, period, list, key = 'contributionPts') {
+  const items = (list || []).filter(x => isNum(x[key]));
+  if (!items.length) return `<section class="card"><h2>${title}<span class="period">${esc(periodLabel(period))}</span></h2><div class="empty">No priced companies yet.</div></section>`;
+  const max = Math.max(...items.map(x => Math.abs(x[key]))) || 1;
+  return `<section class="card"><h2>${title}<span class="period">${esc(periodLabel(period))}</span></h2><ul class="movers">` +
+    items.map(x => {
+      const c = Number(x[key]), cls = c >= 0 ? 'pos' : 'neg';
+      return `<li><span class="name">${esc(nice(x.company))}</span><span class="ret num">${pct(x.returnPct)}</span>` +
+        `<span class="sub"><span class="tick">${esc(x.ticker || '')}</span> · weight ${Number(x.weightPct).toFixed(2)}%</span>` +
+        `<span class="pts num">${sign(c)} pts</span>` +
+        `<span class="bar ${cls}"><span style="width:${Math.max(4, Math.abs(c) / max * 100).toFixed(1)}%"></span></span></li>`;
+    }).join('') + '</ul></section>';
+}
+
+function render() {
+  const etf = (DATA.etfs || []).find(e => e.etf === current);
+  const hl = ((DATA.highlights || {}).etfs || []).find(e => e.etf === current) || {};
+  const H = DATA.highlights || {};
+  if (!etf) { $('app').innerHTML = '<div class="state">No holdings saved yet.</div>'; return; }
+
+  $('tabs').innerHTML = (DATA.etfs || []).map(e => `<button class="tab" role="tab" aria-selected="${e.etf === current}" data-etf="${esc(e.etf)}">${esc(e.etf)}</button>`).join('');
+  $('tabs').querySelectorAll('.tab').forEach(b => b.onclick = () => { current = b.dataset.etf; query = ''; render(); });
+
+  const eqW = Number(hl.totalWeightPct || 0) && (etf.rows || []).filter(r => r.isEquity !== false).reduce((s, r) => s + (Number(r.weightPct) || 0), 0);
+  const pricedShare = eqW ? Math.min(100, (Number(hl.pricedWeightPct) || 0) / eqW * 100) : 0;
+  const kpis = `
+    <div class="kpis">
+      <div class="kpi"><div class="k">Holdings</div><div class="v num">${(etf.rows || []).length}</div><div class="s">${hl.equities ?? '–'} equities · as of ${esc(fmtDate(etf.asOf))}</div></div>
+      <div class="kpi"><div class="k">Priced so far</div><div class="v num">${hl.pricedEquities ?? 0} <span style="font-size:15px;color:var(--muted)">/ ${hl.equities ?? 0}</span></div>
+        <div class="s">${isNum(hl.pricedWeightPct) ? Number(hl.pricedWeightPct).toFixed(1) : '0'}% of the fund's weight</div><div class="meter"><span style="width:${pricedShare.toFixed(1)}%"></span></div></div>
+      <div class="kpi"><div class="k">Priced holdings' contribution</div><div class="v num">${isNum(hl.approxYtdContributionPts) ? `<span class="${hl.approxYtdContributionPts >= 0 ? 'pos' : 'neg'}">${sign(hl.approxYtdContributionPts)} pts</span>` : 'n/a'}</div>
+        <div class="s">${esc(periodLabel(H.ytdPeriod))} · last quarter ${isNum(hl.approxLastQuarterContributionPts) ? sign(hl.approxLastQuarterContributionPts) + ' pts' : 'n/a'}</div></div>
+      <div class="kpi"><div class="k">Latest price date</div><div class="v num" style="font-size:20px">${esc(fmtDate((DATA.pricing || {}).latestPriceDate))}</div><div class="s"><a href="${esc(etf.sourceUrl)}" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none">Fidelity ${esc(etf.etf)} page ↗</a></div></div>
+    </div>`;
+
+  const cards = `<div class="grid">
+    ${movers('Top contributors', H.ytdPeriod, hl.topYtd)}
+    ${movers('Lowest contributors', H.ytdPeriod, hl.bottomYtd)}
+    ${movers('Top contributors', H.lastCompleteQuarter, hl.topLastQuarter)}
+    ${movers('Lowest contributors', H.lastCompleteQuarter, hl.bottomLastQuarter)}
+  </div>`;
+
+  const table = `<section class="card tablecard">
+    <div class="toolbar">
+      <div><h2>All holdings</h2><div class="meta">${esc(etf.etf)} · click a column to sort</div></div>
+      <div class="controls">
+        <label class="toggle"><input type="checkbox" id="noneq" ${showNonEq ? 'checked' : ''}> Show cash &amp; other</label>
+        <input class="search" id="search" type="search" placeholder="Search company or ticker" aria-label="Search company or ticker" value="${esc(query)}">
+      </div>
+    </div>
+    <div class="tablewrap"><table id="table"></table></div>
+  </section>`;
+
+  const r = DATA.latestReport;
+  const narrative = r && r.summary ? `<details class="card narrative"><summary>Agent narrative · generated ${esc(new Date(r.createdAt).toLocaleString('en-CA'))}</summary><div class="body">${md(r.summary)}</div></details>` : '';
+
+  $('app').innerHTML = kpis + cards + table + narrative;
+  $('search').oninput = e => { query = e.target.value; renderTable(); };
+  $('noneq').onchange = e => { showNonEq = e.target.checked; renderTable(); };
+  renderTable();
+}
+
+function renderTable() {
+  const etf = (DATA.etfs || []).find(e => e.etf === current);
+  const ytd = cols.find(c => /YTD$/.test(c));
+  const lastQ = cols.filter(c => /Q/.test(c)).slice(-1)[0];
+  const maxW = Math.max(...(etf.rows || []).map(r => Number(r.weightPct) || 0)) || 1;
+  let rows = (etf.rows || []).map((r, i) => ({ ...r, rank: i + 1, name: nice(r.company),
+    contrib: ytd && isNum((r.returns || {})[ytd]) && isNum(r.weightPct) ? r.weightPct * r.returns[ytd] / 100 : null }));
+  if (!showNonEq) rows = rows.filter(r => r.isEquity !== false);
+  const q = query.trim().toLowerCase();
+  if (q) rows = rows.filter(r => r.name.toLowerCase().includes(q) || String(r.company).toLowerCase().includes(q) || String(r.ticker || '').toLowerCase().includes(q));
+  const val = (r, k) => k === 'name' || k === 'ticker' ? String(r[k] || '') : (k in r ? r[k] : (r.returns || {})[k]);
+  rows.sort((a, b) => { const x = val(a, sort.key), y = val(b, sort.key);
+    if (!isNum(x) && typeof x !== 'string' && !isNum(y) && typeof y !== 'string') return 0;
+    if (x == null) return 1; if (y == null) return -1;
+    return (typeof x === 'string' ? x.localeCompare(y) : x - y) * sort.dir; });
+
+  const head = [['rank', '#', 'l'], ['name', 'Company', 'l'], ['weightPct', 'Weight', '']]
+    .concat(cols.map(c => [c, periodLabel(c) + (c === ytd || c === lastQ ? '<small>partial</small>' : ''), '']))
+    .concat(ytd ? [['contrib', `Contrib. ${esc(periodLabel(ytd))}<small>pts</small>`, '']] : []);
+  const th = head.map(([k, label, cls]) => `<th class="${cls}" data-k="${k}" scope="col">${label}${sort.key === k ? `<span class="arr">${sort.dir > 0 ? '▲' : '▼'}</span>` : ''}</th>`).join('');
+  const body = rows.map(r => {
+    const eq = r.isEquity !== false;
+    return `<tr class="${eq ? '' : 'noneq'}"><td class="l num">${r.rank}</td><td class="l company"><span class="cname">${esc(r.name)}</span>` +
+      `${eq ? (r.ticker ? `<span class="tick">${esc(r.ticker)}</span>` : '<span class="na">no ticker</span>') : '<span class="na">cash/other</span>'}</td>` +
+      `<td class="num">${isNum(r.weightPct) ? Number(r.weightPct).toFixed(2) + '%' : 'n/a'}<span class="wbar"><span style="width:${Math.max(0, (Number(r.weightPct) || 0) / maxW * 100).toFixed(0)}%"></span></span></td>` +
+      cols.map(c => `<td class="num">${eq ? pct((r.returns || {})[c]) : ''}</td>`).join('') +
+      (ytd ? `<td class="num">${eq ? (isNum(r.contrib) ? `<span class="pill ${r.contrib >= 0 ? 'pos' : 'neg'}">${sign(r.contrib)}</span>` : '<span class="na">n/a</span>') : ''}</td>` : '') + '</tr>';
+  }).join('');
+  $('table').innerHTML = `<thead><tr>${th}</tr></thead><tbody>${body || `<tr><td class="l" colspan="${head.length}">No match.</td></tr>`}</tbody>`;
+  $('table').querySelectorAll('th').forEach(h => h.onclick = () => {
+    const k = h.dataset.k; sort = { key: k, dir: sort.key === k ? -sort.dir : (['name', 'ticker', 'rank'].includes(k) ? 1 : -1) }; renderTable();
+  });
+}
+
+async function load() {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/get_public_report`, {
+      method: 'POST',
+      headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' },
+      body: '{}'
+    });
+    if (!res.ok) throw new Error(`data service answered ${res.status}`);
+    DATA = await res.json();
+    cols = periodCols(DATA.etfs || []);
+    current = (DATA.etfs || [])[0] && DATA.etfs[0].etf;
+    const p = DATA.pricing || {};
+    $('updated').innerHTML = `Live data · <b>${p.pricedOk ?? 0}/${p.tickersInLists ?? 0}</b> companies priced · loaded ${esc(new Date().toLocaleString('en-CA'))}`;
+    render();
+  } catch (e) {
+    $('app').innerHTML = `<div class="state error">Could not load the data (${esc(e.message)}). Please try again later.</div>`;
+  }
+}
+load();
+</script>
+</body>
+</html>

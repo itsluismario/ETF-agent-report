@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Luis Mario">
+  <title>ETF Agent Report</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@4.6.1/dist/reset.css">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@4.6.1/dist/reveal.css">
+  <style>
+    .reveal .sourceCode {  /* see #7635 */
+      overflow: visible;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@4.6.1/dist/theme/black.css" id="theme">
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">ETF Agent Report</h1>
+  <p class="subtitle">A monthly report that explains what is driving a
+Fidelity ETF, holding by holding</p>
+  <p class="author">Luis Mario</p>
+  <p class="date">November 2026</p>
+</section>
+
+<section id="the-problem" class="slide level2 smaller">
+<h2 class="smaller">The problem</h2>
+<div class="lead">
+<p>Fidelity’s ETF pages for <strong>FCCA</strong> and its four
+underlying ETFs (<strong>FCCL, FCCV, FCCQ, FCCM</strong>) list each
+fund’s holdings and the percentage weight of each company.</p>
+<p><strong>That’s all they show.</strong></p>
+</div>
+<ul>
+<li>They don’t say <strong>how each company has performed</strong>, or
+<strong>what has been happening</strong> with it.</li>
+<li>An investor can see <em>what they own and how much</em>, but not
+<em>how each holding is doing</em>.</li>
+<li>To find out, they have to look up each company by hand: <strong>more
+than 100 companies</strong> across the four ETFs (117 with a stock
+ticker).</li>
+</ul>
+<aside class="notes">
+<p>Open with the fund page: a list of names and weights, nothing else.
+Then the pain: 117 companies to research by hand, every month.</p>
+</aside>
+</section>
+<section id="why-it-matters" class="slide level2">
+<h2>Why it matters</h2>
+<div class="columns">
+<div class="column" style="width:48%;">
+<p class="muted">
+The fund page answers
+</p>
+<p class="big">
+“What’s in<br>my ETF?”
+</p>
+</div><div class="column" style="width:52%;">
+<p class="muted">
+The investor actually needs
+</p>
+<p class="big accent">
+“Which companies are helping or hurting my returns, and why?”
+</p>
+</div>
+</div>
+<p><br></p>
+<p>This report fills that gap: it pairs each holding’s
+<strong>weight</strong> with its <strong>performance</strong> and its
+<strong>news</strong>, so the investor can understand and monitor the
+fund <strong>month by month</strong>.</p>
+</section>
+<section id="goal-and-scope" class="slide level2">
+<h2>Goal and scope</h2>
+<p>Build a <strong>monthly report</strong> that shows, for every company
+in the ETF, its historical performance and its recent news.</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>Feature</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>2</td>
+<td><strong>Performance by quarter and by year</strong>: % return for
+each quarter (Q1–Q4) and year, next to the company’s weight, with each
+holding’s contribution to the fund</td>
+<td><span class="tag done">LIVE</span></td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td><strong>News and sentiment per company</strong>: last month’s most
+relevant news, rated <em>Very good / Good / Bad / Very bad</em>, with a
+short summary and source link</td>
+<td><span class="tag next">NEXT</span></td>
+</tr>
+</tbody>
+</table>
+<p><small>Funds: FCCL, FCCV, FCCQ, FCCM (the four ETFs inside FCCA) ·
+Frequency: monthly · Per company: ETF weight, quarterly and annual
+returns, contribution · Delivery: live web dashboard</small></p>
+</section>
+<section id="the-solution-in-one-picture" class="slide level2">
+<h2>The solution in one picture</h2>
+<div class="flow">
+  <div class="node"><b>Fidelity</b>Full holdings list of each ETF: company, weight, as-of date</div>
+  <div class="arrow">→</div>
+  <div class="node"><b>n8n agents</b>Holdings Agent finds each company's TSX ticker · monthly price collection · Returns Agent writes the summary</div>
+  <div class="arrow">→</div>
+  <div class="node"><b>Alpha Vantage</b>Month-end prices for every company (free API key)</div>
+  <div class="arrow">→</div>
+  <div class="node"><b>Supabase</b>Postgres computes quarterly, annual and YTD returns and each holding's contribution</div>
+  <div class="arrow">→</div>
+  <div class="node"><b>Netlify</b>Live dashboard that reads the data every time it is opened</div>
+</div>
+<p><br></p>
+<p><small class="muted">No manual steps: the data refreshes itself every
+month, and the page always shows the latest numbers.</small></p>
+</section>
+<section id="how-it-runs-every-month" class="slide level2">
+<h2>How it runs every month</h2>
+<div class="timeline">
+  <div class="step"><div class="d">Day 1</div><b>Holdings refresh</b><br>Downloads the latest holdings of FCCL, FCCV, FCCQ and FCCM from Fidelity (269 holdings) and reuses the tickers it already knows.</div>
+  <div class="step"><div class="d">Days 2–7</div><b>Price collection</b><br>Gets month-end prices for ~24 companies a day (the free API allows 25 a day). Six days cover all 117 companies.</div>
+  <div class="step"><div class="d">Any time</div><b>Report and dashboard</b><br>The Returns Agent writes the summary; the dashboard reads live data from Supabase on every visit.</div>
+</div>
+<p><br></p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Workflow</th>
+<th>Type</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Holdings – monthly refresh</td>
+<td>Scheduled (day 1)</td>
+<td>Full holdings list per ETF</td>
+</tr>
+<tr class="even">
+<td>ETF Holdings Agent</td>
+<td>AI agent (Gemini Flash-Lite)</td>
+<td>Maps company names to TSX tickers</td>
+</tr>
+<tr class="odd">
+<td>Prices – monthly Alpha Vantage fetch</td>
+<td>Scheduled (days 2–7)</td>
+<td>Prices → returns in SQL</td>
+</tr>
+<tr class="even">
+<td>ETF Returns Agent</td>
+<td>AI agent (Gemini Flash-Lite)</td>
+<td>Top / lowest contributors summary</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="technical-depth-what-made-it-hard" class="slide level2">
+<h2>Technical depth: what made it hard</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Challenge</th>
+<th>How we solved it</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Fidelity’s page shows only the <strong>top 10</strong> holdings</td>
+<td>Used Fidelity’s own product data behind the “View all” button: the
+<strong>full list</strong>, weights summing to ~100%</td>
+</tr>
+<tr class="even">
+<td>Fidelity gives <strong>names, not tickers</strong></td>
+<td>The Holdings Agent assigns TSX tickers once; they are
+<strong>cached</strong> and reused every month</td>
+</tr>
+<tr class="odd">
+<td><strong>Yahoo Finance blocks</strong> cloud servers (HTTP 429)</td>
+<td>Switched to <strong>Alpha Vantage</strong> (free key) with a
+<strong>queue</strong>: 24 companies a day, failed symbols move to the
+back</td>
+</tr>
+<tr class="even">
+<td><strong>Stock splits</strong> looked like crashes (Loblaw −67%)</td>
+<td>Split detection in SQL from adjusted vs. raw prices → real return
+<strong>+31.20%</strong></td>
+</tr>
+<tr class="odd">
+<td>Free AI model allows <strong>20 requests a day</strong></td>
+<td>Moved to <strong>Gemini Flash-Lite</strong> (~500/day) and
+redesigned the agents to use <strong>2 requests per run</strong></td>
+</tr>
+<tr class="even">
+<td>A public page must not expose the database</td>
+<td>Row Level Security on every table; the public key can call
+<strong>one read-only function</strong> only</td>
+</tr>
+</tbody>
+</table>
+<aside class="notes">
+<p>Each row is a real problem we hit while building, not a hypothetical
+one.</p>
+</aside>
+</section>
+<section id="it-actually-works" class="slide level2">
+<h2>It actually works</h2>
+<div class="stats">
+  <div class="stat"><div class="n">4</div><div class="l">ETFs covered</div></div>
+  <div class="stat"><div class="n">269</div><div class="l">holdings with weights</div></div>
+  <div class="stat"><div class="n">117</div><div class="l">companies with a ticker</div></div>
+  <div class="stat"><div class="n">$0</div><div class="l">running cost (free tiers)</div></div>
+</div>
+<p><br></p>
+<ul>
+<li>Holdings match Fidelity’s full list: weights sum to
+<strong>99.99–100.02%</strong> per ETF.</li>
+<li>Real prices verified, e.g. Royal Bank closed at <strong>288.37
+CAD</strong> on Nov 13, 2026.</li>
+<li>Example insight (FCCL, 2026 YTD): <strong>Toronto-Dominion
+Bank</strong> returned <span class="pos">+36.38%</span> with a 4.60%
+weight, contributing <span class="pos">+1.67 pts</span>, the top
+contributor.</li>
+<li>Tested end to end: holdings → prices → returns → summary → live
+page.</li>
+</ul>
+</section>
+<section id="design-and-user-experience" class="slide level2">
+<h2>Design and user experience</h2>
+<p><img data-src="images/site-overview.jpg" class="shot"
+style="width:92.0%" /></p>
+<p><small>Tabs per ETF · how much of the fund is priced so far · top and
+lowest contributors for the year and the last quarter, with bars sized
+by contribution</small></p>
+</section>
+<section id="every-holding-side-by-side" class="slide level2">
+<h2>Every holding, side by side</h2>
+<p><img data-src="images/site-table.jpg" class="shot"
+style="width:92.0%" /></p>
+<p><small>Weight next to quarterly and annual returns · contribution
+pills · sortable columns · search by company or ticker · partial periods
+labelled</small></p>
+</section>
+<section id="demo-problem-solution-working-product"
+class="slide level2">
+<h2>Demo: problem → solution → working product</h2>
+<ol type="1">
+<li><strong>The problem</strong>: open a Fidelity ETF page. It shows
+names and weights, nothing about performance.</li>
+<li><strong>The solution</strong>: show the n8n workflows and the
+monthly cycle (holdings on day 1, prices on days 2–7).</li>
+<li><strong>The agent</strong>: ask the Holdings Agent for
+<em>“FCCM”</em>: it builds the full list and finds the tickers.</li>
+<li><strong>The product</strong>: open the live dashboard, switch ETFs,
+sort by contribution and search for a company.</li>
+<li><strong>The insight</strong>: “Toronto-Dominion Bank added +1.67
+points to FCCL this year.”</li>
+</ol>
+<p><small class="muted">Live dashboard: <a
+href="https://chimerical-arithmetic-142fdb.netlify.app"
+class="uri">https://chimerical-arithmetic-142fdb.netlify.app</a></small></p>
+</section>
+<section id="innovation-and-impact" class="slide level2">
+<h2>Innovation and impact</h2>
+<ul>
+<li><strong>Original pairing</strong>: weight × return = each holding’s
+contribution, so the investor sees <strong>who drives the fund</strong>,
+not just who is in it.</li>
+<li><strong>Real time saved</strong>: from researching 117 companies by
+hand every month to a report that builds itself.</li>
+<li><strong>Built to be trusted</strong>: missing data is shown as
+<em>n/a</em>, never guessed; AI-assigned tickers are marked
+<em>unverified</em> until a price confirms them.</li>
+<li><strong>Accessible</strong>: runs entirely on free tiers (n8n,
+Supabase, Alpha Vantage, Gemini Flash-Lite, Netlify).</li>
+</ul>
+</section>
+<section id="limitations-honestly" class="slide level2">
+<h2>Limitations, honestly</h2>
+<ul>
+<li><strong>Feature 1 (news and sentiment) is not built yet.</strong> It
+is the next step.</li>
+<li><strong>FCCA itself</strong> is not shown yet: we cover its four
+underlying ETFs; the combined FCCA view is planned.</li>
+<li><strong>Prices fill in over the month</strong>: the free API allows
+25 calls a day, so a full refresh takes 6 days. Today 22 of 117
+companies are priced; the rest arrive on days 2–7.</li>
+<li>A few symbols are <strong>not available</strong> from the price
+source (e.g. Dollarama, Canadian Pacific) and show <em>n/a</em>.</li>
+<li>Contribution uses <strong>today’s weights</strong> for past periods:
+an approximation, not the fund’s official return.</li>
+</ul>
+</section>
+<section id="next-steps" class="slide level2">
+<h2>Next steps</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><span class="tag next">FEATURE 1</span> <strong>News and
+sentiment</strong></td>
+<td>A News Agent collects each company’s most relevant news from the
+past month, rates each item and the month as <em>Very good / Good / Bad
+/ Very bad</em>, and stores a short summary with the source link</td>
+</tr>
+<tr class="even">
+<td><span class="tag next">FCCA</span> <strong>Combined
+view</strong></td>
+<td>Combine FCCA’s weight in each ETF with each company’s weight in that
+ETF</td>
+</tr>
+<tr class="odd">
+<td><span class="tag next">DELIVERY</span> <strong>Monthly email or
+PDF</strong></td>
+<td>Send the summary and a link to the dashboard on the 8th of each
+month</td>
+</tr>
+<tr class="even">
+<td><span class="tag next">COVERAGE</span> <strong>Faster price
+refresh</strong></td>
+<td>A paid data tier, or a second source for symbols that are
+missing</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="how-we-meet-the-judging-criteria" class="slide level2">
+<h2>How we meet the judging criteria</h2>
+<div class="criteria">
+  <div class="c"><b>Technical Depth &amp; Execution</b><br>4 workflows, 2 AI agents, SQL return engine with split adjustment, rate-limit queue, secured public API. Working end to end.</div>
+  <div class="c"><b>Innovation &amp; Impact</b><br>Turns "what's in my ETF" into "who drives my returns". Replaces hours of manual research every month, at $0.</div>
+  <div class="c"><b>Design &amp; User Experience</b><br>One page per ETF: summary cards, contributor rankings, a sortable and searchable table, plain-language notes.</div>
+  <div class="c"><b>Demo</b><br>Problem (Fidelity page) → solution (agents and monthly cycle) → working product (live dashboard).</div>
+</div>
+</section>
+<section id="thank-you" class="slide level2 center">
+<h2 class="center">Thank you</h2>
+<p><strong>ETF Agent Report</strong></p>
+<p>Live dashboard: <a
+href="https://chimerical-arithmetic-142fdb.netlify.app"
+class="uri">https://chimerical-arithmetic-142fdb.netlify.app</a></p>
+<p>Code: <a href="https://github.com/itsluismario/ETF-agent-report"
+class="uri">https://github.com/itsluismario/ETF-agent-report</a></p>
+<p><small class="muted">Information only, not investment advice. Data:
+Fidelity Canada product data, Alpha Vantage.</small></p>
+</section>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/reveal.js@4.6.1/dist/reveal.js"></script>
+
+  <!-- reveal.js plugins -->
+  <script src="https://unpkg.com/reveal.js@4.6.1/plugin/notes/notes.js"></script>
+  <script src="https://unpkg.com/reveal.js@4.6.1/plugin/search/search.js"></script>
+  <script src="https://unpkg.com/reveal.js@4.6.1/plugin/zoom/zoom.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: true,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: false,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: true,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'slide',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'fade',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1280,
+
+        height: 760,
+
+        // reveal.js plugins
+        plugins: [
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>
