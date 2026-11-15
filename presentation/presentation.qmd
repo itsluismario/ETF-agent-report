@@ -140,13 +140,13 @@ Build a **monthly report** that shows, for every company in the ETF, its histori
     if (s.rev) [x1, y1, x2, y2] = [x2, y2, x1, y1];
     q('#pf-dottext').textContent = s.pkt; q('#pf-when').textContent = s.when; q('#pf-text').textContent = `${i + 1}. ${s.txt}`;
     const w = Math.max(70, s.pkt.length * 9 + 26); q('#pf-dotbg').setAttribute('x', -w / 2); q('#pf-dotbg').setAttribute('width', w);
-    cancelAnimationFrame(raf); const t0 = performance.now(), D = 1300;
+    cancelAnimationFrame(raf); const t0 = performance.now(), D = 800;
     const step = t => { const p = Math.min(1, (t - t0) / D), e = p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
       dot.setAttribute('transform', `translate(${x1 + (x2 - x1) * e},${y1 + (y2 - y1) * e})`); dot.style.opacity = p > .97 ? 1 - (p - .97) * 20 : 1;
       if (p < 1) raf = requestAnimationFrame(step); };
     raf = requestAnimationFrame(step);
   }
-  function loop() { clearInterval(timer); if (playing) timer = setInterval(() => show(i + 1), 3400); }
+  function loop() { clearInterval(timer); if (playing) timer = setInterval(() => show(i + 1), 2000); }
   steps.onclick = e => { const b = e.target.closest('button'); if (b) { show(+b.dataset.i); loop(); } };
   q('#pf-play').onclick = () => { playing = !playing; q('#pf-play').textContent = playing ? '❚❚' : '▶'; loop(); };
   show(0); loop();
