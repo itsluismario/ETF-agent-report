@@ -61,7 +61,7 @@ Before you start, have **n8n** (the project's workflow list) open in a browser t
 | 1:27 – 1:37 | Scroll to **Fund map**. Hover RY, then TD | > The fund map shows every holding: box size is its weight, colour is its return. Green is up, grey means no price yet. |
 | 1:37 – 1:47 | Click the **TD** box (the table filters), point at the YTD and Contrib. columns | > Click Toronto-Dominion Bank: up thirty-six percent this year with a four point six percent weight. That's one point six seven points for the fund. |
 | 1:47 – 1:51 | Clear the search, click the **FCCM** tab | > And the same view works for every ETF. |
-| 1:51 – 2:06 | Switch to the **n8n** tab: hover the 4 workflows, open "Prices – monthly Alpha Vantage fetch" for 3 s, then go back to the presentation (slide 7) | > Behind it, n8n runs four workflows: holdings on day one, prices on days two to seven, and two AI agents. All on a schedule, with no manual steps. |
+| 1:51 – 2:06 | Switch to the **n8n** tab and open "Prices – monthly Alpha Vantage fetch", then go back to the presentation (slide 7) | > And here's n8n: the Prices workflow runs on days two to seven, about twenty-four companies a day. |
 
 Narration for ElevenLabs, as one block:
 
@@ -70,7 +70,7 @@ Narration for ElevenLabs, as one block:
 > The fund map shows every holding: box size is its weight, colour is its return. Green is up, grey means no price yet. <break time="0.5s" />
 > Click Toronto-Dominion Bank: up thirty-six percent this year with a four point six percent weight. That's one point six seven points for the fund. <break time="0.5s" />
 > And the same view works for every ETF. <break time="0.5s" />
-> Behind it, n8n runs four workflows: holdings on day one, prices on days two to seven, and two AI agents. All on a schedule, with no manual steps.
+> And here's n8n: the Prices workflow runs on days two to seven, about twenty-four companies a day.
 
 ---
 
