@@ -156,3 +156,16 @@
 .dt-list li.no { color: var(--muted); }
 .dt-list li.no::before { content: "✗"; color: var(--neg); }
 .dt-next { margin-top: 22px; font-size: 0.75em; color: #ffd166; font-weight: 700; }
+
+/* problem slide with screenshot */
+.prob { display: grid; grid-template-columns: auto 1fr; gap: 32px; align-items: start; }
+.prob img.shot { max-height: 520px; width: auto; margin: 0; }
+.prob-text .lead { font-size: 0.8em; margin: 0 0 14px; line-height: 1.35; }
+.prob-text .dt-h { font-size: 0.7em; margin-bottom: 4px; }
+.prob-text .dt-list { font-size: 0.66em; } .prob-text .dt-list li { margin: 5px 0; }
+.prob-facts { font-size: 0.6em; margin: 14px 0 0 1.1em; padding: 0; line-height: 1.35; } .prob-facts li { margin: 8px 0; }
+/* demo link slide */
+.demo-link { text-align: center; margin-top: 40px; }
+.demo-link .dl-k { font-size: 0.8em; color: var(--muted); text-transform: uppercase; letter-spacing: .12em; margin: 0; }
+.demo-link .dl-url { font-size: 1.15em; font-weight: 800; margin-top: 10px; }
+.demo-link a { color: #ffd166; text-decoration: none; border-bottom: 3px solid #ffd166; }

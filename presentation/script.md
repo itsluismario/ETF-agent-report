@@ -1,6 +1,6 @@
 # ETF Agent Report: 3-minute script (slides + demo)
 
-**Total: about 2:40** (20 s of margin within 3:00). About 370 spoken words at ElevenLabs' natural pace (~150 words per minute).
+**Total: about 2:55** (5 s of margin within 3:00). About 400 spoken words at ElevenLabs' natural pace (~150 words per minute).
 Each block shows the time window, what is on screen, and the narration to paste into ElevenLabs.
 `<break time="0.5s" />` tags are ElevenLabs pause tags. Paste them as they are.
 
@@ -18,7 +18,7 @@ Each block shows the time window, what is on screen, and the narration to paste 
 
 ## 0:12 – 0:30 · The problem (18 s · ~45 words)
 
-**On screen:** "The problem".
+**On screen:** "The problem" (Fidelity holdings screenshot + what is missing).
 
 > Fidelity's Investly app helps people invest in ETFs. <break time="0.3s" /> But once the money is in, most clients stop paying attention. The fund page shows only names and weights, and fewer than half of investors know everything they hold. <break time="0.3s" /> And pushing them to trade isn't the answer: the most active traders earn less.
 
@@ -50,7 +50,7 @@ Each block shows the time window, what is on screen, and the narration to paste 
 
 ## 1:15 – 2:15 · DEMO (60 s · ~150 words)
 
-**On screen:** slide 6 "Demo" shows the Fidelity holdings screenshot (`images/current-website.jpg`). Narrate the first line over it, then switch to the browser, and come back to the presentation for slide 7.
+**On screen:** slide 6 "Demo" shows only the dashboard link. Say the first line, click the link (or switch to the browser), and come back to the presentation for slide 7.
 
 Record the screen while the audio plays, or present live. Have these tabs open in this order before you start:
 1. n8n → the project's workflow list
@@ -58,7 +58,7 @@ Record the screen while the audio plays, or present live. Have these tabs open i
 
 | Time | Action on screen | Narration |
 |---|---|---|
-| 1:15 – 1:23 | **Slide 6:** the Fidelity screenshot (names and weights) | > Imagine you hold a Fidelity ETF, like FCCM. Today, this is what you see: names and weights, nothing about performance. |
+| 1:15 – 1:23 | **Slide 6:** the "Live demo" link | > Let's see it live. |
 | 1:23 – 1:38 | **Browser, tab 1:** n8n. Hover the 4 workflows, then open "Prices – monthly Alpha Vantage fetch" for 3 s | > In n8n we have four workflows. Holdings refresh on day one, prices on days two to seven, and two AI agents. Everything runs on a schedule. |
 | 1:38 – 1:48 | **Tab 2:** dashboard on FCCL, point at the KPI cards and top contributors | > And this is what you'd get every month. For FCCL you see the holdings, how much is priced, and who contributed most this year. |
 | 1:48 – 1:58 | Scroll to **Fund map**. Hover RY, then TD | > The fund map shows every holding: box size is its weight, colour is its return. Green is up, grey means no price yet. |
@@ -67,7 +67,7 @@ Record the screen while the audio plays, or present live. Have these tabs open i
 
 Narration for ElevenLabs, as one block (~150 words):
 
-> Imagine you hold a Fidelity ETF, like FCCM. Today, this is what you see: names and weights, nothing about performance. <break time="0.5s" />
+> Let's see it live. <break time="0.5s" />
 > In n8n we have four workflows. Holdings refresh on day one, prices on days two to seven, and two AI agents. Everything runs on a schedule. <break time="0.5s" />
 > And this is what you'd get every month. For FCCL you see the holdings, how much is priced, and who contributed most this year. <break time="0.5s" />
 > The fund map shows every holding: box size is its weight, colour is its return. Green is up, grey means no price yet. <break time="0.5s" />
@@ -76,15 +76,15 @@ Narration for ElevenLabs, as one block (~150 words):
 
 ---
 
-## 2:15 – 2:30 · Innovation and impact (15 s · ~38 words)
+## 2:15 – 2:45 · Innovation and impact (30 s · ~75 words)
 
 **On screen:** "Innovation and impact".
 
-> For the investor, it's a reason to come back every month and understand their money, with no trades and nothing at risk. <break time="0.3s" /> For Fidelity and Investly, engaged investors stay longer and invest more. And it runs automatically, on data Fidelity already has.
+> For the investor, it's a reason to come back every month and understand their money, with no trades and nothing at risk. <break time="0.3s" /> For Fidelity and Investly, the research points the same way. Finimize found that seventy-four percent of its customers would invest more with more chances to learn. <break time="0.3s" /> And for one asset manager studied by S S and C, twenty-one percent higher retention meant thirty-three percent more revenue. <break time="0.3s" /> All of it runs automatically, on data Fidelity already has.
 
 ---
 
-## 2:30 – 2:40 · Thank you (10 s · ~25 words)
+## 2:45 – 2:55 · Thank you (10 s · ~25 words)
 
 **On screen:** "Thank you".
 

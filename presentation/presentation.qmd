@@ -22,15 +22,22 @@ format:
 ## The problem
 
 ```{=html}
-<div class="lead">
-<p>Investly and Fidelity help people invest in ETFs. <strong>But once the money is in, most clients stop paying attention.</strong></p>
+<div class="prob">
+  <img src="images/current-website.jpg" alt="Fidelity FCCM holdings list: company names and weights only" class="shot">
+  <div class="prob-text">
+    <p class="lead">Investly and Fidelity help people invest in ETFs. <strong>But once the money is in, most clients stop paying attention.</strong></p>
+    <p class="dt-h">What an FCCM investor sees today</p>
+    <ul class="dt-list">
+      <li class="yes">Company names and weights</li>
+      <li class="no">How each company is performing</li>
+      <li class="no">Returns by quarter or by year</li>
+    </ul>
+    <ul class="prob-facts">
+      <li>Only <strong>43%</strong> of Americans with workplace retirement accounts know all the types of investments in them.<sup>1</sup></li>
+      <li>"Be more active" is not the fix: the households that traded most earned <strong>11.4%</strong> a year vs. <strong>17.9%</strong> for the market.<sup>2</sup></li>
+    </ul>
+  </div>
 </div>
-<ul>
-<li>A fund page shows only <strong>names and weights</strong>: not how each holding is doing, or why the fund moved.</li>
-<li>Many investors don't know what they own: only <strong>43%</strong> of Americans with workplace retirement accounts know all the types of investments in them.<sup>1</sup></li>
-<li>A disconnected client has <strong>no reason to come back</strong>, learn, or invest more.</li>
-<li>"Be more active" is not the fix: the households that traded most earned <strong>11.4%</strong> a year vs. <strong>17.9%</strong> for the market.<sup>2</sup></li>
-</ul>
 <p class="src">1 NerdWallet / The Harris Poll survey of 2,000+ U.S. adults · 2 Barber &amp; Odean, "Trading Is Hazardous to Your Wealth", Journal of Finance, 2000</p>
 ```
 
@@ -153,22 +160,12 @@ format:
 </div>
 ```
 
-## Demo: problem → solution → working product
+## Demo {.center}
 
 ```{=html}
-<div class="demo-today">
-  <img src="images/current-website.jpg" alt="Fidelity FCCL holdings list: company names and weights only" class="shot">
-  <div class="dt-text">
-    <p class="dt-h">What an FCCM investor sees today</p>
-    <ul class="dt-list">
-      <li class="yes">Company names</li>
-      <li class="yes">Weight of each company</li>
-      <li class="no">How each company is performing</li>
-      <li class="no">Returns by quarter or by year</li>
-      <li class="no">Which companies moved the fund</li>
-    </ul>
-    <p class="dt-next">Now, the live dashboard →</p>
-  </div>
+<div class="demo-link">
+  <p class="dl-k">Live demo</p>
+  <p class="dl-url"><a href="https://chimerical-arithmetic-142fdb.netlify.app" target="_blank">chimerical-arithmetic-142fdb.netlify.app</a></p>
 </div>
 ```
 
