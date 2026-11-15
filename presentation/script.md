@@ -1,10 +1,10 @@
 # ETF Agent Report: 3-minute script (slides + demo)
 
-**Total: 3:00.** About 400 spoken words at ElevenLabs' natural pace (~150 words per minute).
+**Total: about 2:40** (20 s of margin within 3:00). About 370 spoken words at ElevenLabs' natural pace (~150 words per minute).
 Each block shows the time window, what is on screen, and the narration to paste into ElevenLabs.
 `<break time="0.5s" />` tags are ElevenLabs pause tags. Paste them as they are.
 
-**Slides (9, one per block):** 1 Title · 2 The problem · 3 Goal and scope · 4 The solution (animation) · 5 Built on Fidelity × n8n · 6 Technical depth · 7 Demo (switch to the live demo here) · 8 Innovation and impact · 9 Thank you.
+**Slides (8, one per block):** 1 Title · 2 The problem · 3 Goal and scope · 4 The solution (animation) · 5 Built on Fidelity × n8n · 6 Demo (switch to the live demo here) · 7 Innovation and impact · 8 Thank you.
 
 ---
 
@@ -20,7 +20,7 @@ Each block shows the time window, what is on screen, and the narration to paste 
 
 **On screen:** "The problem".
 
-> Fidelity's pages for FCCA and its four underlying ETFs show which companies each fund holds, and how much. <break time="0.3s" /> That's all. <break time="0.3s" /> They don't show how each company is performing. To find out, an investor would have to research more than a hundred companies by hand, every month.
+> Fidelity's Investly app helps people invest in ETFs. <break time="0.3s" /> But once the money is in, most clients stop paying attention. The fund page shows only names and weights, and fewer than half of investors know everything they hold. <break time="0.3s" /> And pushing them to trade isn't the answer: the most active traders earn less.
 
 ---
 
@@ -28,7 +28,7 @@ Each block shows the time window, what is on screen, and the narration to paste 
 
 **On screen:** "Goal and scope".
 
-> Our goal: one monthly report that puts each holding's weight next to its quarterly and yearly returns. <break time="0.3s" /> Performance is live today. News and sentiment is the next step.
+> Our goal: keep ETF investors involved every month, without asking them to trade. <break time="0.3s" /> Each month they get a report on their own ETF: which companies moved it, and by how much.
 
 ---
 
@@ -48,17 +48,9 @@ Each block shows the time window, what is on screen, and the narration to paste 
 
 ---
 
-## 1:15 – 1:35 · Technical depth (20 s · ~50 words)
+## 1:15 – 2:15 · DEMO (60 s · ~150 words)
 
-**On screen:** "Technical depth: what made it hard".
-
-> Every row here is a real problem we hit. <break time="0.3s" /> Fidelity's page shows only the top ten holdings, so we used the full list. Yahoo blocked us, so we built a price queue that fits a free API. <break time="0.3s" /> And stock splits looked like crashes, so we fixed them in SQL.
-
----
-
-## 1:35 – 2:35 · DEMO (60 s · ~150 words)
-
-**On screen:** start on slide 7 "Demo", then switch to the browser.
+**On screen:** start on slide 6 "Demo", then switch to the browser.
 
 Record the screen while the audio plays, or present live. Have these tabs open in this order before you start:
 1. `fidelity.ca/en/products/etfs/fccl/` scrolled to the holdings list
@@ -67,33 +59,33 @@ Record the screen while the audio plays, or present live. Have these tabs open i
 
 | Time | Action on screen | Narration |
 |---|---|---|
-| 1:35 – 1:43 | **Tab 1:** Fidelity FCCL page, scroll the holdings | > Here's the problem: Fidelity's FCCL page. Names and weights, nothing about performance. |
-| 1:43 – 1:58 | **Tab 2:** n8n. Hover the 4 workflows, then open "Prices – monthly Alpha Vantage fetch" for 3 s | > In n8n we have four workflows. Holdings refresh on day one, prices on days two to seven, and two AI agents. Everything runs on a schedule. |
-| 1:58 – 2:08 | **Tab 3:** dashboard on FCCL, point at the KPI cards and top contributors | > And this is the result: a live dashboard. For FCCL we see the holdings, how much is priced, and who contributed most this year. |
-| 2:08 – 2:18 | Scroll to **Fund map**. Hover RY, then TD | > The fund map shows every holding: box size is its weight, colour is its return. Green is up, grey means no price yet. |
-| 2:18 – 2:28 | Click the **TD** box (the table filters), point at the YTD and Contrib. columns | > Click Toronto-Dominion Bank: up thirty-six percent this year with a four point six percent weight. That's one point six seven points for the fund. |
-| 2:28 – 2:35 | Clear the search, click the **FCCM** tab | > And the same view works for every ETF. |
+| 1:15 – 1:23 | **Tab 1:** Fidelity FCCL page, scroll the holdings | > Imagine you hold FCCL. Today, this is what you see: names and weights, nothing about performance. |
+| 1:23 – 1:38 | **Tab 2:** n8n. Hover the 4 workflows, then open "Prices – monthly Alpha Vantage fetch" for 3 s | > In n8n we have four workflows. Holdings refresh on day one, prices on days two to seven, and two AI agents. Everything runs on a schedule. |
+| 1:38 – 1:48 | **Tab 3:** dashboard on FCCL, point at the KPI cards and top contributors | > And this is what you'd get every month. For FCCL you see the holdings, how much is priced, and who contributed most this year. |
+| 1:48 – 1:58 | Scroll to **Fund map**. Hover RY, then TD | > The fund map shows every holding: box size is its weight, colour is its return. Green is up, grey means no price yet. |
+| 1:58 – 2:08 | Click the **TD** box (the table filters), point at the YTD and Contrib. columns | > Click Toronto-Dominion Bank: up thirty-six percent this year with a four point six percent weight. That's one point six seven points for the fund. |
+| 2:08 – 2:15 | Clear the search, click the **FCCM** tab | > And the same view works for every ETF. |
 
 Narration for ElevenLabs, as one block (~150 words):
 
-> Here's the problem: Fidelity's FCCL page. Names and weights, nothing about performance. <break time="0.5s" />
+> Imagine you hold FCCL. Today, this is what you see: names and weights, nothing about performance. <break time="0.5s" />
 > In n8n we have four workflows. Holdings refresh on day one, prices on days two to seven, and two AI agents. Everything runs on a schedule. <break time="0.5s" />
-> And this is the result: a live dashboard. For FCCL we see the holdings, how much is priced, and who contributed most this year. <break time="0.5s" />
+> And this is what you'd get every month. For FCCL you see the holdings, how much is priced, and who contributed most this year. <break time="0.5s" />
 > The fund map shows every holding: box size is its weight, colour is its return. Green is up, grey means no price yet. <break time="0.5s" />
 > Click Toronto-Dominion Bank: up thirty-six percent this year with a four point six percent weight. That's one point six seven points for the fund. <break time="0.5s" />
 > And the same view works for every ETF.
 
 ---
 
-## 2:35 – 2:50 · Innovation and impact (15 s · ~38 words)
+## 2:15 – 2:30 · Innovation and impact (15 s · ~38 words)
 
 **On screen:** "Innovation and impact".
 
-> The idea is simple: weight times return shows who actually drives the fund. <break time="0.3s" /> It replaces hours of manual research, runs entirely on free tiers, and never guesses. Missing data is shown as n/a.
+> For the investor, it's a reason to come back every month and understand their money, with no trades and nothing at risk. <break time="0.3s" /> For Fidelity and Investly, engaged investors stay longer and invest more. And it runs automatically, on data Fidelity already has.
 
 ---
 
-## 2:50 – 3:00 · Thank you (10 s · ~25 words)
+## 2:30 – 2:40 · Thank you (10 s · ~25 words)
 
 **On screen:** "Thank you".
 

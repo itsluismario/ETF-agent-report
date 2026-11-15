@@ -34,7 +34,7 @@
     .display.math{display: block; text-align: center; margin: 0.5rem auto;}
   </style>
   <link rel="stylesheet" href="https://unpkg.com/reveal.js@4.6.1/dist/theme/black.css" id="theme">
-  <link rel="stylesheet" href="styles.css?v=4"/>
+  <link rel="stylesheet" href="styles.css?v=5"/>
 </head>
 <body>
   <div class="reveal">
@@ -52,65 +52,31 @@ Fidelity ETF, holding by holding</p>
 <div class="powered">Built with Fidelity data · orchestrated by n8n</div>
 </section>
 
-<section id="the-problem" class="slide level2 smaller">
-<h2 class="smaller">The problem</h2>
+<section id="the-problem" class="slide level2">
+<h2>The problem</h2>
 <div class="lead">
-<p>Fidelity’s ETF pages for <strong>FCCA</strong> and its four
-underlying ETFs (<strong>FCCL, FCCV, FCCQ, FCCM</strong>) list each
-fund’s holdings and the percentage weight of each company.</p>
-<p><strong>That’s all they show.</strong></p>
+<p>Investly and Fidelity help people invest in ETFs. <strong>But once the money is in, most clients stop paying attention.</strong></p>
 </div>
 <ul>
-<li>They don’t say <strong>how each company has performed</strong>, or
-<strong>what has been happening</strong> with it.</li>
-<li>An investor can see <em>what they own and how much</em>, but not
-<em>how each holding is doing</em>.</li>
-<li>To find out, they have to look up each company by hand: <strong>more
-than 100 companies</strong> across the four ETFs (117 with a stock
-ticker).</li>
+<li>A fund page shows only <strong>names and weights</strong>: not how each holding is doing, or why the fund moved.</li>
+<li>Many investors don't know what they own: only <strong>43%</strong> of Americans with workplace retirement accounts know all the types of investments in them.<sup>1</sup></li>
+<li>A disconnected client has <strong>no reason to come back</strong>, learn, or invest more.</li>
+<li>"Be more active" is not the fix: the households that traded most earned <strong>11.4%</strong> a year vs. <strong>17.9%</strong> for the market.<sup>2</sup></li>
 </ul>
-<aside class="notes">
-<p>Open with the fund page: a list of names and weights, nothing else.
-Then the pain: 117 companies to research by hand, every month.</p>
-</aside>
+<p class="src">1 NerdWallet / The Harris Poll survey of 2,000+ U.S. adults · 2 Barber &amp; Odean, "Trading Is Hazardous to Your Wealth", Journal of Finance, 2000</p>
 </section>
 <section id="goal-and-scope" class="slide level2">
 <h2>Goal and scope</h2>
-<p>Build a <strong>monthly report</strong> that shows, for every company
-in the ETF, its historical performance and its recent news.</p>
+<p class="lead"><strong>Goal: keep ETF investors involved every month, without asking them to trade.</strong></p>
+<p>Each month the investor gets a report on <em>their own</em> ETF: which companies moved it, and by how much. They follow their money; they don't have to touch it.</p>
 <table>
-<colgroup>
-<col style="width: 33%" />
-<col style="width: 33%" />
-<col style="width: 33%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th></th>
-<th>Feature</th>
-<th>Status</th>
-</tr>
-</thead>
+<thead><tr><th>Feature</th><th>What the investor sees</th><th>Status</th></tr></thead>
 <tbody>
-<tr class="odd">
-<td>2</td>
-<td><strong>Performance by quarter and by year</strong>: % return for
-each quarter (Q1–Q4) and year, next to the company’s weight, with each
-holding’s contribution to the fund</td>
-<td><span class="tag done">LIVE</span></td>
-</tr>
-<tr class="even">
-<td>1</td>
-<td><strong>News and sentiment per company</strong>: last month’s most
-relevant news, rated <em>Very good / Good / Bad / Very bad</em>, with a
-short summary and source link</td>
-<td><span class="tag next">NEXT</span></td>
-</tr>
+<tr><td><strong>Performance by quarter and year</strong></td><td>Each company's return next to its weight, and its contribution to the fund</td><td><span class="tag done">LIVE</span></td></tr>
+<tr><td><strong>News and sentiment</strong></td><td>Last month's key news per company, rated <em>Very good / Good / Bad / Very bad</em>, with a source link</td><td><span class="tag next">NEXT</span></td></tr>
 </tbody>
 </table>
-<p><small>Funds: FCCL, FCCV, FCCQ, FCCM (the four ETFs inside FCCA) ·
-Frequency: monthly · Per company: ETF weight, quarterly and annual
-returns, contribution · Delivery: live web dashboard</small></p>
+<p class="src">Funds: FCCL, FCCV, FCCQ, FCCM (the four ETFs inside FCCA) · Updated monthly · Live web dashboard</p>
 </section>
 <section id="the-solution-in-one-picture" class="slide level2">
 <h2>The solution in one picture</h2>
@@ -212,58 +178,6 @@ returns, contribution · Delivery: live web dashboard</small></p>
   <div class="sp n8n"><div class="name">n8n</div><div class="role">The engine that runs everything</div><ul><li><b>4 workflows</b>: 2 scheduled, 2 AI agents</li><li><b>AI Agent node</b> with tools: Postgres queries and a Fidelity fetch sub-workflow</li><li><b>Schedule Trigger</b> runs the monthly cycle with no manual steps</li><li><b>HTTP Request</b> batching keeps within the free price API limit (25 a day)</li></ul></div>
 </div>
 </section>
-<section id="technical-depth-what-made-it-hard" class="slide level2">
-<h2>Technical depth: what made it hard</h2>
-<table>
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Challenge</th>
-<th>How we solved it</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Fidelity’s page shows only the <strong>top 10</strong> holdings</td>
-<td>Used Fidelity’s own product data behind the “View all” button: the
-<strong>full list</strong>, weights summing to ~100%</td>
-</tr>
-<tr class="even">
-<td>Fidelity gives <strong>names, not tickers</strong></td>
-<td>The Holdings Agent assigns TSX tickers once; they are
-<strong>cached</strong> and reused every month</td>
-</tr>
-<tr class="odd">
-<td><strong>Yahoo Finance blocks</strong> cloud servers (HTTP 429)</td>
-<td>Switched to <strong>Alpha Vantage</strong> (free key) with a
-<strong>queue</strong>: 24 companies a day, failed symbols move to the
-back</td>
-</tr>
-<tr class="even">
-<td><strong>Stock splits</strong> looked like crashes (Loblaw −67%)</td>
-<td>Split detection in SQL from adjusted vs. raw prices → real return
-<strong>+31.20%</strong></td>
-</tr>
-<tr class="odd">
-<td>Free AI model allows <strong>20 requests a day</strong></td>
-<td>Moved to <strong>Gemini Flash-Lite</strong> (~500/day) and
-redesigned the agents to use <strong>2 requests per run</strong></td>
-</tr>
-<tr class="even">
-<td>A public page must not expose the database</td>
-<td>Row Level Security on every table; the public key can call
-<strong>one read-only function</strong> only</td>
-</tr>
-</tbody>
-</table>
-<aside class="notes">
-<p>Each row is a real problem we hit while building, not a hypothetical
-one.</p>
-</aside>
-</section>
 <section id="demo-problem-solution-working-product"
 class="slide level2">
 <h2>Demo: problem → solution → working product</h2>
@@ -285,17 +199,24 @@ class="uri">https://chimerical-arithmetic-142fdb.netlify.app</a></small></p>
 </section>
 <section id="innovation-and-impact" class="slide level2">
 <h2>Innovation and impact</h2>
-<ul>
-<li><strong>Original pairing</strong>: weight × return = each holding’s
-contribution, so the investor sees <strong>who drives the fund</strong>,
-not just who is in it.</li>
-<li><strong>Real time saved</strong>: from researching 117 companies by
-hand every month to a report that builds itself.</li>
-<li><strong>Built to be trusted</strong>: missing data is shown as
-<em>n/a</em>, never guessed; AI-assigned tickers are marked
-<em>unverified</em> until a price confirms them.</li>
-<li><strong>Accessible</strong>: runs entirely on free tiers (n8n, Postgres, Alpha Vantage, Gemini Flash-Lite, Netlify).</li>
-</ul>
+<div class="impact">
+  <div class="ic"><b>For the investor</b>
+    <ul>
+      <li>Understands <strong>who drives their fund</strong>: weight × return = each holding's contribution.</li>
+      <li>A <strong>monthly reason to come back</strong>, with no trades needed and no money at risk.</li>
+      <li>Honest data: missing values show as <em>n/a</em>, never guessed.</li>
+    </ul>
+  </div>
+  <div class="ic"><b>For Fidelity and Investly</b>
+    <ul>
+      <li><strong>Engaged investors invest more and stay:</strong> 74% of Finimize's customers say they would invest more with more chances to learn.<sup>1</sup></li>
+      <li><strong>Retention is revenue:</strong> for one asset manager, 21% higher retention meant 33% higher revenue.<sup>2</sup></li>
+      <li><strong>Regular touchpoints</strong> improve understanding and investment discipline.<sup>3</sup></li>
+      <li><strong>Low cost:</strong> fully automated in n8n, using data Fidelity already has.</li>
+    </ul>
+  </div>
+</div>
+<p class="src">1 Finimize, "Customer Engagement for Financial Services", 2024 · 2 SS&amp;C, "Digital Engagement Drives Retention" · 3 FNZ, platform engagement data</p>
 </section>
 <section id="thank-you" class="slide level2 center">
 <h2 class="center">Thank you</h2>

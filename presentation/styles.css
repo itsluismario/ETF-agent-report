@@ -136,3 +136,11 @@
 .pf-bar { font-size: 0.7em; }
 .pf-cap { color: #ffffff; }
 .pf-ctl button { color: #c3cad6; border-color: #6b7689; background: #262f3d; }
+
+/* sources + impact columns */
+.reveal p.src { font-size: 0.45em; color: var(--muted); margin-top: 18px; }
+.reveal sup { font-size: 0.55em; color: var(--muted); }
+.impact { display: grid; grid-template-columns: 1fr 1.25fr; gap: 20px; margin-top: 10px; }
+.impact .ic { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 16px 20px; font-size: 0.7em; line-height: 1.4; }
+.impact .ic > b { display: block; font-size: 1.3em; margin-bottom: 6px; color: var(--accent); }
+.impact ul { margin: 0 0 0 1.1em; padding: 0; } .impact li { margin: 8px 0; }
