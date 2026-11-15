@@ -2,7 +2,7 @@
 Hi, we're Linh Dan Ngo, Evan Lin, Dylan Li and Luis Mario. <break time="0.3s" /> This is ETF Agent Report: a monthly report that explains what is driving a Fidelity ETF, holding by holding.
 
 ===== CLIP 2 · 0:12 – 0:30 · The problem =====
-Fidelity's Investly app helps people invest in ETFs. <break time="0.3s" /> But once the money is in, most clients stop paying attention. The fund page shows only names and weights, and fewer than half of investors know everything they hold. <break time="0.3s" /> And pushing them to trade isn't the answer: the most active traders earn less.
+Fidelity's Investly app helps people invest in ETFs. <break time="0.3s" /> But once the money is in, most clients stop paying attention. The fund page shows only names and weights, and in Canada, forty-four percent of people score low on basic investment knowledge. <break time="0.3s" /> And pushing them to trade isn't the answer: the most active traders earn less.
 
 ===== CLIP 3 · 0:30 – 0:42 · Goal and scope =====
 Our goal: keep ETF investors involved every month, without asking them to trade. <break time="0.3s" /> Each month they get a report on their own ETF: which companies moved it, and by how much.
@@ -13,11 +13,11 @@ Here's how it flows. <break time="0.3s" /> On day one, n8n downloads the full ho
 ===== CLIP 5 · 1:05 – 1:15 · Built on Fidelity × n8n =====
 Fidelity gives us the data and the question. <break time="0.2s" /> n8n is the engine: four workflows, two AI agents, and a monthly schedule with no manual steps.
 
-===== CLIP 6 · 1:15 – 2:15 · DEMO =====
-Let's see it live. <break time="0.5s" /> In n8n we have four workflows. Holdings refresh on day one, prices on days two to seven, and two AI agents. Everything runs on a schedule. <break time="0.5s" /> And this is what you'd get every month. For FCCL you see the holdings, how much is priced, and who contributed most this year. <break time="0.5s" /> The fund map shows every holding: box size is its weight, colour is its return. Green is up, grey means no price yet. <break time="0.5s" /> Click Toronto-Dominion Bank: up thirty-six percent this year with a four point six percent weight. That's one point six seven points for the fund. <break time="0.5s" /> And the same view works for every ETF.
+===== CLIP 6 · 1:15 – 2:06 · DEMO =====
+Let's see it live. <break time="0.5s" /> This is what you'd get every month. For FCCL you see the holdings, how much is priced, and who contributed most this year. <break time="0.5s" /> The fund map shows every holding: box size is its weight, colour is its return. Green is up, grey means no price yet. <break time="0.5s" /> Click Toronto-Dominion Bank: up thirty-six percent this year with a four point six percent weight. That's one point six seven points for the fund. <break time="0.5s" /> And the same view works for every ETF. <break time="0.5s" /> Behind it, n8n runs four workflows: holdings on day one, prices on days two to seven, and two AI agents. All on a schedule, with no manual steps.
 
-===== CLIP 7 · 2:15 – 2:45 · Innovation and impact =====
+===== CLIP 7 · 2:06 – 2:36 · Innovation and impact =====
 For the investor, it's a reason to come back every month and understand their money, with no trades and nothing at risk. <break time="0.3s" /> For Fidelity and Investly, the research points the same way. Finimize found that seventy-four percent of its customers would invest more with more chances to learn. <break time="0.3s" /> And for one asset manager studied by S S and C, twenty-one percent higher retention meant thirty-three percent more revenue. <break time="0.3s" /> All of it runs automatically, on data Fidelity already has.
 
-===== CLIP 8 · 2:45 – 2:55 · Thank you =====
+===== CLIP 8 · 2:36 – 2:46 · Thank you =====
 Next, we'll add news and sentiment for every company. <break time="0.3s" /> Thank you! The live dashboard and the code are linked here.

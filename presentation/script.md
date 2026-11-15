@@ -1,6 +1,6 @@
 # ETF Agent Report: 3-minute script (slides + demo)
 
-**Total: about 2:55** (5 s of margin within 3:00). About 400 spoken words at ElevenLabs' natural pace (~150 words per minute).
+**Total: about 2:46** (14 s of margin within 3:00). About 390 spoken words at ElevenLabs' natural pace (~150 words per minute).
 Each block shows the time window, what is on screen, and the narration to paste into ElevenLabs.
 `<break time="0.5s" />` tags are ElevenLabs pause tags. Paste them as they are.
 
@@ -20,7 +20,7 @@ Each block shows the time window, what is on screen, and the narration to paste 
 
 **On screen:** "The problem" (Fidelity holdings screenshot + what is missing).
 
-> Fidelity's Investly app helps people invest in ETFs. <break time="0.3s" /> But once the money is in, most clients stop paying attention. The fund page shows only names and weights, and fewer than half of investors know everything they hold. <break time="0.3s" /> And pushing them to trade isn't the answer: the most active traders earn less.
+> Fidelity's Investly app helps people invest in ETFs. <break time="0.3s" /> But once the money is in, most clients stop paying attention. The fund page shows only names and weights, and in Canada, forty-four percent of people score low on basic investment knowledge. <break time="0.3s" /> And pushing them to trade isn't the answer: the most active traders earn less.
 
 ---
 
@@ -48,35 +48,33 @@ Each block shows the time window, what is on screen, and the narration to paste 
 
 ---
 
-## 1:15 – 2:15 · DEMO (60 s · ~150 words)
+## 1:15 – 2:06 · DEMO (51 s · ~130 words)
 
-**On screen:** slide 6 "Demo" shows only the dashboard link. Say the first line, click the link (or switch to the browser), and come back to the presentation for slide 7.
+**On screen:** slide 6 "Demo" shows only the dashboard link. Click it, do the demo, and come back to the presentation for slide 7.
 
-Record the screen while the audio plays, or present live. Have these tabs open in this order before you start:
-1. n8n → the project's workflow list
-2. The dashboard: <https://chimerical-arithmetic-142fdb.netlify.app>
+Before you start, have **n8n** (the project's workflow list) open in a browser tab. The link on slide 6 opens the dashboard.
 
 | Time | Action on screen | Narration |
 |---|---|---|
-| 1:15 – 1:23 | **Slide 6:** the "Live demo" link | > Let's see it live. |
-| 1:23 – 1:38 | **Browser, tab 1:** n8n. Hover the 4 workflows, then open "Prices – monthly Alpha Vantage fetch" for 3 s | > In n8n we have four workflows. Holdings refresh on day one, prices on days two to seven, and two AI agents. Everything runs on a schedule. |
-| 1:38 – 1:48 | **Tab 2:** dashboard on FCCL, point at the KPI cards and top contributors | > And this is what you'd get every month. For FCCL you see the holdings, how much is priced, and who contributed most this year. |
-| 1:48 – 1:58 | Scroll to **Fund map**. Hover RY, then TD | > The fund map shows every holding: box size is its weight, colour is its return. Green is up, grey means no price yet. |
-| 1:58 – 2:08 | Click the **TD** box (the table filters), point at the YTD and Contrib. columns | > Click Toronto-Dominion Bank: up thirty-six percent this year with a four point six percent weight. That's one point six seven points for the fund. |
-| 2:08 – 2:15 | Clear the search, click the **FCCM** tab, then go back to the presentation (slide 7) | > And the same view works for every ETF. |
+| 1:15 – 1:17 | **Slide 6:** click the "Live demo" link (opens the dashboard) | > Let's see it live. |
+| 1:17 – 1:27 | **Dashboard** on FCCL: point at the KPI cards and top contributors | > This is what you'd get every month. For FCCL you see the holdings, how much is priced, and who contributed most this year. |
+| 1:27 – 1:37 | Scroll to **Fund map**. Hover RY, then TD | > The fund map shows every holding: box size is its weight, colour is its return. Green is up, grey means no price yet. |
+| 1:37 – 1:47 | Click the **TD** box (the table filters), point at the YTD and Contrib. columns | > Click Toronto-Dominion Bank: up thirty-six percent this year with a four point six percent weight. That's one point six seven points for the fund. |
+| 1:47 – 1:51 | Clear the search, click the **FCCM** tab | > And the same view works for every ETF. |
+| 1:51 – 2:06 | Switch to the **n8n** tab: hover the 4 workflows, open "Prices – monthly Alpha Vantage fetch" for 3 s, then go back to the presentation (slide 7) | > Behind it, n8n runs four workflows: holdings on day one, prices on days two to seven, and two AI agents. All on a schedule, with no manual steps. |
 
-Narration for ElevenLabs, as one block (~150 words):
+Narration for ElevenLabs, as one block:
 
 > Let's see it live. <break time="0.5s" />
-> In n8n we have four workflows. Holdings refresh on day one, prices on days two to seven, and two AI agents. Everything runs on a schedule. <break time="0.5s" />
-> And this is what you'd get every month. For FCCL you see the holdings, how much is priced, and who contributed most this year. <break time="0.5s" />
+> This is what you'd get every month. For FCCL you see the holdings, how much is priced, and who contributed most this year. <break time="0.5s" />
 > The fund map shows every holding: box size is its weight, colour is its return. Green is up, grey means no price yet. <break time="0.5s" />
 > Click Toronto-Dominion Bank: up thirty-six percent this year with a four point six percent weight. That's one point six seven points for the fund. <break time="0.5s" />
-> And the same view works for every ETF.
+> And the same view works for every ETF. <break time="0.5s" />
+> Behind it, n8n runs four workflows: holdings on day one, prices on days two to seven, and two AI agents. All on a schedule, with no manual steps.
 
 ---
 
-## 2:15 – 2:45 · Innovation and impact (30 s · ~75 words)
+## 2:06 – 2:36 · Innovation and impact (30 s · ~75 words)
 
 **On screen:** "Innovation and impact".
 
@@ -84,7 +82,7 @@ Narration for ElevenLabs, as one block (~150 words):
 
 ---
 
-## 2:45 – 2:55 · Thank you (10 s · ~25 words)
+## 2:36 – 2:46 · Thank you (10 s · ~25 words)
 
 **On screen:** "Thank you".
 
