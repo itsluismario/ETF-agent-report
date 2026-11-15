@@ -62,22 +62,26 @@ Build a **monthly report** that shows, for every company in the ETF, its histori
 ## The solution in one picture
 
 ```{=html}
-<div class="flow">
-  <div class="node"><b>Fidelity</b>Full holdings list of each ETF: company, weight, as-of date</div>
-  <div class="arrow">→</div>
-  <div class="node"><b>n8n agents</b>Holdings Agent finds each company's TSX ticker · monthly price collection · Returns Agent writes the summary</div>
-  <div class="arrow">→</div>
-  <div class="node"><b>Alpha Vantage</b>Month-end prices for every company (free API key)</div>
-  <div class="arrow">→</div>
-  <div class="node"><b>Supabase</b>Postgres computes quarterly, annual and YTD returns and each holding's contribution</div>
-  <div class="arrow">→</div>
-  <div class="node"><b>Netlify</b>Live dashboard that reads the data every time it is opened</div>
+<div class="hub">
+  <div class="col-h">Sources</div><div></div><div class="col-h">n8n workflows</div><div></div><div class="col-h">Supabase · Postgres</div><div></div><div class="col-h">Website</div>
+
+  <div class="node src"><b>Fidelity</b>Holdings &amp; weights</div><div class="arrow">→</div>
+  <div class="node wf"><b>Holdings refresh + Holdings Agent</b>Day 1 · finds TSX tickers</div><div class="arrow both">⇄</div>
+  <div class="node db"><b>Supabase (Postgres)</b>The single source of truth<ul><li><code>etf_constituents</code> holdings + tickers</li><li><code>price_monthly</code> prices</li><li><code>perf_returns</code> returns, computed in SQL (split-adjusted)</li><li><code>report_runs</code> agent summaries</li></ul><span class="sm">Every workflow reads its queue from here and writes its results back</span></div>
+  <div class="arrow out">→</div>
+  <div class="node web"><b>Netlify dashboard</b>Calls <code>get_public_report()</code> on every visit (read-only key)</div>
+
+  <div class="node src"><b>Alpha Vantage</b>Month-end prices</div><div class="arrow">→</div>
+  <div class="node wf"><b>Price collection</b>Days 2–7 · ~24 tickers a day</div><div class="arrow both">⇄</div>
+
+  <div class="node src"><b>Gemini</b>Flash-Lite (free)</div><div class="arrow">→</div>
+  <div class="node wf"><b>Returns Agent</b>Writes the summary</div><div class="arrow both">⇄</div>
 </div>
 ```
 
 <br>
 
-<small class="muted">No manual steps: the data refreshes itself every month, and the page always shows the latest numbers.</small>
+<small class="muted">Postgres is the hub: ⇄ = the workflow reads from and writes to the database. No manual steps; the page always shows the latest numbers.</small>
 
 ## How it runs every month
 
